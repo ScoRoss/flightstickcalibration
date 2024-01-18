@@ -18,3 +18,5 @@ C:\Users\rossl\OneDrive\Desktop\UWS\Study_Project\Codestuff\WpfApp1\WpfApp1\obj\
 C:\Users\rossl\OneDrive\Desktop\UWS\Study_Project\Codestuff\WpfApp1\WpfApp1\obj\Debug\net8.0-windows\WpfApp1.pdb
 C:\Users\rossl\OneDrive\Desktop\UWS\Study_Project\Codestuff\WpfApp1\WpfApp1\obj\Debug\net8.0-windows\WpfApp1.genruntimeconfig.cache
 C:\Users\rossl\OneDrive\Desktop\UWS\Study_Project\Codestuff\WpfApp1\WpfApp1\obj\Debug\net8.0-windows\ref\WpfApp1.dll
+C:\Users\rossl\OneDrive\Desktop\UWS\Study_Project\Codestuff\WpfApp1\WpfApp1\obj\Debug\net8.0-windows\BindButtonsWindow.baml
+C:\Users\rossl\OneDrive\Desktop\UWS\Study_Project\Codestuff\WpfApp1\WpfApp1\obj\Debug\net8.0-windows\BindButtonsWindow.g.cs

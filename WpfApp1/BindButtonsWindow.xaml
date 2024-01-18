@@ -1,0 +1,30 @@
+<Window x:Class="WpfApp1.BindButtonsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="BindButtonsWindow" Height="600" Width="800" Background="Black">
+    <Grid>
+        <!-- Banner ID and Name -->
+        <StackPanel VerticalAlignment="Top" Margin="10">
+            <TextBlock Text="Copyright © 2024 Ross Lamont" Foreground="White"/>
+            <TextBlock Text="Banner ID: B01650642" Foreground="White" Margin="0,5,0,10"/>
+        </StackPanel>
+
+        <!-- Buttons Layout -->
+        <UniformGrid Rows="5" Columns="6" Margin="20">
+            <!-- Add 30 buttons here -->
+            <Button Content="Button 1" Width="100" Height="50" Margin="5"/>
+            <Button Content="Button 2" Width="100" Height="50" Margin="5"/>
+            <Button Content="Button 3" Width="100" Height="50" Margin="5"/>
+            <Button Content="Button 4" Width="100" Height="50" Margin="5"/>
+            <Button Content="Button 5" Width="100" Height="50" Margin="5"/>
+            <Button Content="Button 6" Width="100" Height="50" Margin="5"/>
+            <Button Content="Button 7" Width="100" Height="50" Margin="5"/>
+            <Button Content="Button 8" Width="100" Height="50" Margin="5"/>
+            <Button Content="Button 9" Width="100" Height="50" Margin="5"/>
+            <Button Content="Button 10" Width="100" Height="50" Margin="5"/>
+            <Button Content="Button 11" Width="100" Height="50" Margin="5"/>
+            <Button Content="Button 12" Width="100" Height="50" Margin="5"/>
+            <!-- Add more buttons similarly -->
+        </UniformGrid>
+    </Grid>
+</Window>
