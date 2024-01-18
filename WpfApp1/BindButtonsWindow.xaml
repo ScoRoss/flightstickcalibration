@@ -24,6 +24,7 @@
             <Button Content="Button 10" Width="100" Height="50" Margin="5"/>
             <Button Content="Button 11" Width="100" Height="50" Margin="5"/>
             <Button Content="Button 12" Width="100" Height="50" Margin="5"/>
+            <Button Content="Button 13" Width="100" Height="50" Margin="5"/>
             <!-- Add more buttons similarly -->
         </UniformGrid>
     </Grid>
