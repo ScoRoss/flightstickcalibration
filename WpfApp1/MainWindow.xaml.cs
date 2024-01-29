@@ -1,17 +1,28 @@
 ﻿using Microsoft.Win32;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace WpfApp1
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        private string _selectedFilePath;
+
+        public string SelectedFilePath
+        {
+            get { return _selectedFilePath; }
+            set
+            {
+                _selectedFilePath = value;
+                OnPropertyChanged();
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = this; // Set DataContext to the current instance of MainWindow
         }
 
         private void SelectFileButton_Click(object sender, RoutedEventArgs e)
@@ -21,19 +32,25 @@ namespace WpfApp1
 
             if (openFileDialog.ShowDialog() == true)
             {
-                // Do something with the selected file path, for example:
-                string selectedFilePath = openFileDialog.FileName;
-                MessageBox.Show($"Selected File: {selectedFilePath}");
+                // Update the SelectedFilePath property
+                SelectedFilePath = openFileDialog.FileName;
+                MessageBox.Show($"Selected File: {SelectedFilePath}");
             }
         }
 
         private void BindButtonsButton_Click(object sender, RoutedEventArgs e)
         {
-            // Create an instance of the BindButtonsWindow and show it
-            BindButtonsWindow bindButtonsWindow = new BindButtonsWindow();
+            // Create an instance of the BindButtonsWindow and pass the selected file path
+            BindButtonsWindow bindButtonsWindow = new BindButtonsWindow(SelectedFilePath);
             bindButtonsWindow.Show();
         }
 
+        // INotifyPropertyChanged implementation
+        public event PropertyChangedEventHandler PropertyChanged;
 
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }
