@@ -5,6 +5,7 @@ namespace WpfApp1
 {
     public class BindButtonsWindowViewModel : INotifyPropertyChanged
     {
+        
         private string _selectedFilePath;
 
         public string SelectedFilePath
@@ -31,4 +32,5 @@ namespace WpfApp1
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
+    
 }

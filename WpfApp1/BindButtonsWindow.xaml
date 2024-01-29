@@ -3,26 +3,25 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="BindButtonsWindow" Height="600" Width="800" Background="Black">
     <Grid>
-        <!-- Display Selected File Path at Top-Left -->
+        <!-- Display Selected File Path  -->
         <TextBlock Text="{Binding SelectedFilePath}" Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10"/>
 
         <!-- Buttons Layout -->
         <UniformGrid Rows="5" Columns="6" Margin="20">
-            <!-- Add 30 buttons here -->
-            <Button Content="Button 1" Width="100" Height="50" Margin="5"/>
-            <Button Content="Button 2" Width="100" Height="50" Margin="5"/>
-            <Button Content="Button 3" Width="100" Height="50" Margin="5"/>
-            <Button Content="Button 4" Width="100" Height="50" Margin="5"/>
-            <Button Content="Button 5" Width="100" Height="50" Margin="5"/>
-            <Button Content="Button 6" Width="100" Height="50" Margin="5"/>
-            <Button Content="Button 7" Width="100" Height="50" Margin="5"/>
-            <Button Content="Button 8" Width="100" Height="50" Margin="5"/>
-            <Button Content="Button 9" Width="100" Height="50" Margin="5"/>
-            <Button Content="Button 10" Width="100" Height="50" Margin="5"/>
-            <Button Content="Button 11" Width="100" Height="50" Margin="5"/>
-            <Button Content="Button 12" Width="100" Height="50" Margin="5"/>
+            <!-- Add buttons here -->
+            <Button Content="placeholder thr1" Width="100" Height="50" Margin="5"/>
+            <Button Content="placeholder thr2 " Width="100" Height="50" Margin="5"/>
+            <Button Content="Eject" Width="100" Height="50" Margin="5"/>
+            <Button Content="TGL Mining Mode" Width="100" Height="50" Margin="5"/>
+            <Button Content="TGL Miss`le Mode" Width="100" Height="50" Margin="5"/>
+            <Button Content="TGL Quantum" Width="100" Height="50" Margin="5"/>
+            <Button Content="TGL Scan Mode" Width="100" Height="50" Margin="5"/>
+            <Button Content="Flight Ready" Width="100" Height="50" Margin="5"/>
+            <Button Content="Close All Doors" Width="100" Height="50" Margin="5"/>
+            <Button Content="Lock All Doors" Width="100" Height="50" Margin="5"/>
+            <Button Content="Self Destruct" Width="100" Height="50" Margin="5"/>
+            <Button Content="Unlock All Doors" Width="100" Height="50" Margin="5"/>
             <Button Content="Button 13" Width="100" Height="50" Margin="5"/>
-            <!-- Add more buttons similarly -->
         </UniformGrid>
 
         <!-- Banner ID at Center Bottom -->

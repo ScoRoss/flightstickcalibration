@@ -10,4 +10,11 @@ namespace WpfApp1
             DataContext = new BindButtonsWindowViewModel(selectedFilePath);
         }
     }
+    public class ActionInfo
+    {
+        public string ActionName { get; set; }
+        public string InputBinding { get; set; }
+        public string NewInputBinding { get; set; } 
+    }
+
 }
