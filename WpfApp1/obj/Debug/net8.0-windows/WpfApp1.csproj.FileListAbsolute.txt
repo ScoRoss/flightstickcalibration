@@ -21,3 +21,6 @@ C:\Users\rossl\OneDrive\Desktop\UWS\Study_Project\Codestuff\WpfApp1\WpfApp1\obj\
 C:\Users\rossl\OneDrive\Desktop\UWS\Study_Project\Codestuff\WpfApp1\WpfApp1\obj\Debug\net8.0-windows\BindButtonsWindow.baml
 C:\Users\rossl\OneDrive\Desktop\UWS\Study_Project\Codestuff\WpfApp1\WpfApp1\obj\Debug\net8.0-windows\BindButtonsWindow.g.cs
 C:\Users\rossl\OneDrive\Desktop\UWS\Study_Project\Codestuff\WpfApp1\WpfApp1\obj\Debug\net8.0-windows\WpfApp1.sourcelink.json
+C:\Users\rossl\OneDrive\Desktop\UWS\Study_Project\Codestuff\WpfApp1\WpfApp1\bin\Debug\net8.0-windows\Newtonsoft.Json.dll
+C:\Users\rossl\OneDrive\Desktop\UWS\Study_Project\Codestuff\WpfApp1\WpfApp1\obj\Debug\net8.0-windows\WpfApp1.csproj.AssemblyReference.cache
+C:\Users\rossl\OneDrive\Desktop\UWS\Study_Project\Codestuff\WpfApp1\WpfApp1\obj\Debug\net8.0-windows\WpfApp1.csproj.CopyComplete

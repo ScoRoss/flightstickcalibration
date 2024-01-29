@@ -1,5 +1,5 @@
 using System.Windows;
-
+using Newtonsoft.Json;
 namespace WpfApp1
 {
     public partial class BindButtonsWindow : Window
@@ -9,12 +9,17 @@ namespace WpfApp1
             InitializeComponent();
             DataContext = new BindButtonsWindowViewModel(selectedFilePath);
         }
-    }
-    public class ActionInfo
-    {
-        public string ActionName { get; set; }
-        public string InputBinding { get; set; }
-        public string NewInputBinding { get; set; } 
-    }
-
-}
+    }    public class ActionInfo
+         {
+             [JsonProperty("ActionName")]
+             public string ActionName { get; set; }
+     
+             [JsonProperty("InputBinding")]
+             public string InputBinding { get; set; }
+     
+             [JsonProperty("NewInputBinding")]
+             public string NewInputBinding { get; set; } 
+         }
+         
+     
+     }
