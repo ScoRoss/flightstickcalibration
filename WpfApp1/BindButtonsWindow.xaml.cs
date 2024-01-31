@@ -2,7 +2,6 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using Newtonsoft.Json;
 
 namespace WpfApp1
 {
@@ -43,9 +42,10 @@ namespace WpfApp1
 
                                 if (!string.IsNullOrEmpty(actionMapName))
                                 {
-                                    // Create a button for each action map
+                                    // Create a button for each action map with some margin for spacing
                                     Button button = new Button();
                                     button.Content = actionMapName;
+                                    button.Margin = new Thickness(10); // Adjust the margin as needed
                                     button.Click += (sender, e) => HandleButtonClick(actionMapName);
 
                                     // Add the button to your UI (UniformGrid in this case)
