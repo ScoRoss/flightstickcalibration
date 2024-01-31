@@ -25,6 +25,21 @@
       <Compile Update="ActionMap.cs">
         <DependentUpon>BindButtonsWindow.xaml.cs</DependentUpon>
       </Compile>
+      <Compile Update="BindButtonsWindowViewModel.cs">
+        <DependentUpon>BindButtonsWindow.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="Category.cs">
+        <DependentUpon>BindButtonsWindow.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="Catergory.cs">
+        <DependentUpon>BindButtonsWindow.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="CustomisationUIHeader.cs">
+        <DependentUpon>BindButtonsWindow.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="DeviceInstance.cs">
+        <DependentUpon>BindButtonsWindow.xaml</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>
