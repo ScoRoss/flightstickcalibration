@@ -12,4 +12,19 @@
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="Categories.cs">
+        <DependentUpon>BindButtonsWindow.xaml.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Devices.cs">
+        <DependentUpon>BindButtonsWindow.xaml.cs</DependentUpon>
+      </Compile>
+      <Compile Update="ActionMaps.cs">
+        <DependentUpon>BindButtonsWindow.xaml.cs</DependentUpon>
+      </Compile>
+      <Compile Update="ActionMap.cs">
+        <DependentUpon>BindButtonsWindow.xaml.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>

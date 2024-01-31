@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Linq;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,21 +26,32 @@ namespace WpfApp1
             {
                 try
                 {
-                    // Deserialize JSON content into dynamic
-                    dynamic jsonData = JsonConvert.DeserializeObject(_viewModel.JsonContent);
+                    // Deserialize JSON content into JObject
+                    JObject jsonData = JObject.Parse(_viewModel.JsonContent);
 
                     if (jsonData != null)
                     {
                         // Assuming your XAML contains a UniformGrid named "UniformGridButtons"
-                        foreach (var property in jsonData)
-                        {
-                            // Create a button for each property
-                            Button button = new Button();
-                            button.Content = property.Name;
-                            button.Click += (sender, e) => HandleButtonClick(property);
+                        JArray actionMaps = jsonData["ActionMaps"]?["actionmap"] as JArray;
 
-                            // Add the button to your UI (UniformGrid in this case)
-                            UniformGridButtons.Children.Add(button);
+                        if (actionMaps != null)
+                        {
+                            foreach (JObject actionMap in actionMaps)
+                            {
+                                // Assuming each action map has a unique identifier
+                                string actionMapName = actionMap["@name"]?.ToString();
+
+                                if (!string.IsNullOrEmpty(actionMapName))
+                                {
+                                    // Create a button for each action map
+                                    Button button = new Button();
+                                    button.Content = actionMapName;
+                                    button.Click += (sender, e) => HandleButtonClick(actionMapName);
+
+                                    // Add the button to your UI (UniformGrid in this case)
+                                    UniformGridButtons.Children.Add(button);
+                                }
+                            }
                         }
                     }
                 }
@@ -50,10 +62,10 @@ namespace WpfApp1
             }
         }
 
-        private void HandleButtonClick(dynamic property)
+        private void HandleButtonClick(string actionMapName)
         {
-            // Handle button click based on the associated action
-            MessageBox.Show($"Button clicked: {property.Name}");
+            // Handle button click based on the associated action map
+            MessageBox.Show($"Button clicked for action map: {actionMapName}");
         }
     }
 }
