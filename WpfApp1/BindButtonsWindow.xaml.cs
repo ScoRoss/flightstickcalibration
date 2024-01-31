@@ -1,25 +1,59 @@
+using System;
 using System.Windows;
+using System.Windows.Controls;
 using Newtonsoft.Json;
+
 namespace WpfApp1
 {
     public partial class BindButtonsWindow : Window
     {
+        private readonly BindButtonsWindowViewModel _viewModel;
+
         public BindButtonsWindow(string selectedFilePath)
         {
             InitializeComponent();
-            DataContext = new BindButtonsWindowViewModel(selectedFilePath);
+            _viewModel = new BindButtonsWindowViewModel(selectedFilePath);
+            DataContext = _viewModel;
+
+            // Call the method to generate buttons based on JSON content
+            GenerateButtonsFromJson();
         }
-    }    public class ActionInfo
-         {
-             [JsonProperty("ActionName")]
-             public string ActionName { get; set; }
-     
-             [JsonProperty("InputBinding")]
-             public string InputBinding { get; set; }
-     
-             [JsonProperty("NewInputBinding")]
-             public string NewInputBinding { get; set; } 
-         }
-         
-     
-     }
+
+        private void GenerateButtonsFromJson()
+        {
+            if (!string.IsNullOrEmpty(_viewModel.JsonContent))
+            {
+                try
+                {
+                    // Deserialize JSON content into dynamic
+                    dynamic jsonData = JsonConvert.DeserializeObject(_viewModel.JsonContent);
+
+                    if (jsonData != null)
+                    {
+                        // Assuming your XAML contains a UniformGrid named "UniformGridButtons"
+                        foreach (var property in jsonData)
+                        {
+                            // Create a button for each property
+                            Button button = new Button();
+                            button.Content = property.Name;
+                            button.Click += (sender, e) => HandleButtonClick(property);
+
+                            // Add the button to your UI (UniformGrid in this case)
+                            UniformGridButtons.Children.Add(button);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error generating buttons: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void HandleButtonClick(dynamic property)
+        {
+            // Handle button click based on the associated action
+            MessageBox.Show($"Button clicked: {property.Name}");
+        }
+    }
+}

@@ -7,21 +7,8 @@
         <TextBlock Text="{Binding SelectedFilePath}" Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10"/>
 
         <!-- Buttons Layout -->
-        <UniformGrid Rows="5" Columns="6" Margin="20">
-            <!-- Add buttons here -->
-            <Button Content="placeholder thr1" Width="100" Height="50" Margin="5"/>
-            <Button Content="placeholder thr2 " Width="100" Height="50" Margin="5"/>
-            <Button Content="Eject" Width="100" Height="50" Margin="5"/>
-            <Button Content="TGL Mining Mode" Width="100" Height="50" Margin="5"/>
-            <Button Content="TGL Miss`le Mode" Width="100" Height="50" Margin="5"/>
-            <Button Content="TGL Quantum" Width="100" Height="50" Margin="5"/>
-            <Button Content="TGL Scan Mode" Width="100" Height="50" Margin="5"/>
-            <Button Content="Flight Ready" Width="100" Height="50" Margin="5"/>
-            <Button Content="Close All Doors" Width="100" Height="50" Margin="5"/>
-            <Button Content="Lock All Doors" Width="100" Height="50" Margin="5"/>
-            <Button Content="Self Destruct" Width="100" Height="50" Margin="5"/>
-            <Button Content="Unlock All Doors" Width="100" Height="50" Margin="5"/>
-            <Button Content="Button 13" Width="100" Height="50" Margin="5"/>
+        <UniformGrid Rows="5" Columns="6" Margin="20" Name="UniformGridButtons">
+            <!-- Buttons will be dynamically generated here -->
         </UniformGrid>
 
         <!-- Banner ID at Center Bottom -->
