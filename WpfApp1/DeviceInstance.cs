@@ -5,5 +5,5 @@ public class DeviceInstance
     [JsonProperty("@instance")]
     public string Instance { get; set; }
 
-    
+    //
 }
