@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="AnyStick" Height="450" Width="800">
     <Window.Background>
-        <ImageBrush ImageSource="C:\Users\rossl\OneDrive\Desktop\UWS\Study_Project\Codestuff\WpfApp1\WpfApp1\splashimage\DRAKE.PNG"/> <!-- Replace 'your_image.jpg' with your actual image file -->
+        <ImageBrush ImageSource="C:\Users\rossl\OneDrive\Desktop\UWS\Study_Project\Codestuff\WpfApp1\WpfApp1\splashimage\DRAKE.PNG"/>
     </Window.Background>
 
     <Grid>
