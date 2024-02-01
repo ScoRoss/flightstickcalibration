@@ -8,6 +8,6 @@ namespace WpfApp1
         [JsonProperty("Label")]
         public string Label { get; set; }
 
-        // Add other properties if needed
+       
     }
 }

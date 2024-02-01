@@ -30,7 +30,7 @@ namespace WpfApp1
 
                     if (jsonData != null)
                     {
-                        // Assuming your XAML contains a UniformGrid named "UniformGridButtons"
+                        // Assuming your XAML contains a UniformGrid 
                         JArray actionMaps = jsonData["ActionMaps"]?["actionmap"] as JArray;
 
                         if (actionMaps != null)
@@ -48,7 +48,7 @@ namespace WpfApp1
                                     button.Margin = new Thickness(10); // Adjust the margin as needed
                                     button.Click += (sender, e) => HandleButtonClick(actionMapName);
 
-                                    // Add the button to your UI (UniformGrid in this case)
+                                    
                                     UniformGridButtons.Children.Add(button);
                                 }
                             }
