@@ -25,7 +25,7 @@ public class ActionMaps
     public object Modifiers { get; set; }
 
     [JsonProperty("actionmap")]
-    public List<ActionMap> ActionMapList { get; set; } // Change the property name to avoid conflict
+    public List<ActionMap> ActionMapList { get; set; } 
 }
 
 public class Option
