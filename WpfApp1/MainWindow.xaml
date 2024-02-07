@@ -6,12 +6,11 @@
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
         Title="AnyStick" Height="450" Width="800">
+    
     <!-- Set the application icon -->
     <Window.Icon>
         <BitmapImage UriSource="C:\Users\rossl\OneDrive\Desktop\UWS\Study_Project\Codestuff\WpfApp1\WpfApp1\splashimage\png\logo-color.png"/>
     </Window.Icon>
-
-
 
     <Window.Background>
         <ImageBrush ImageSource="C:\Users\rossl\OneDrive\Desktop\UWS\Study_Project\Codestuff\WpfApp1\WpfApp1\splashimage\DRAKE.PNG"/>
@@ -24,8 +23,8 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- Logo Image -->
-        <Image Source="PathToYourLogo\YourLogo.png" Width="150" Height="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,20"/>
+        <!-- Logo Image for display -->
+        <Image Source="C:\Users\rossl\OneDrive\Desktop\UWS\Study_Project\Codestuff\WpfApp1\WpfApp1\splashimage\png\anystick-high-resolution-logo-black-transparent.png" Width="150" Height="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,20"/>
 
         <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,20">
             <Button Content="Select File" Width="100" Height="30" Margin="0,0,0,5" Click="SelectFileButton_Click"/>
