@@ -13,6 +13,7 @@ namespace WpfApp1
     {
         private string _selectedFilePath;
         private string _jsonContent; // Store JSON content as a variable
+        private string _loadedFilePath; // Added LoadedFilePath property
 
         public string SelectedFilePath
         {
@@ -31,6 +32,17 @@ namespace WpfApp1
             set
             {
                 _jsonContent = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // Added LoadedFilePath property
+        public string LoadedFilePath
+        {
+            get { return _loadedFilePath; }
+            set
+            {
+                _loadedFilePath = value;
                 OnPropertyChanged();
             }
         }
@@ -55,6 +67,9 @@ namespace WpfApp1
                     // Convert XML to JSON
                     JsonContent = ConvertXmlToJson(xmlContent);
 
+                    // Set the LoadedFilePath property
+                    LoadedFilePath = SelectedFilePath;
+
                     Console.WriteLine($"JSON content:\n{JsonContent}");  // Print the JSON content to the console
                 }
                 catch (Exception ex)
@@ -67,7 +82,6 @@ namespace WpfApp1
                 Console.WriteLine($"File not found: {SelectedFilePath}");
             }
         }
-
 
         private string ConvertXmlToJson(string xmlContent)
         {
