@@ -89,7 +89,7 @@ namespace WpfApp1
                 }
             }
         }
-
+// get all updates is still not in use 
         private JArray GetAllInputs(JObject jsonData)
         {
             // Retrieve all @input elements across all devices
@@ -99,7 +99,7 @@ namespace WpfApp1
 
             return allInputs;
         }
-
+// collecting all the values from the json file and removing the @
         private void GetAllInputsRecursive(JToken token, JArray allInputs)
         {
             if (token.Type == JTokenType.Object)
@@ -122,7 +122,8 @@ namespace WpfApp1
                 }
             }
         }
-
+// button click currentlu to be made into a modify input file 
+// this will be the tricky part and may be put into another class 
         private void HandleButtonClickForInput(string inputName)
         {
             // Handle button click based on the associated input
