@@ -122,8 +122,8 @@ namespace WpfApp1
                 }
             }
         }
-// button click currentlu to be made into a modify input file 
-// this will be the tricky part and may be put into another class 
+            // button click currentlu to be made into a modify input file 
+            // this will be the tricky part and may be put into another class 
         private void HandleButtonClickForInput(string inputName)
         {
             // Handle button click based on the associated input
