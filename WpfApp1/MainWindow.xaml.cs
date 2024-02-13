@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -23,6 +24,19 @@ namespace WpfApp1
         {
             InitializeComponent();
             DataContext = this; // Set DataContext to the current instance of MainWindow
+
+            // Initialize the JoystickManager
+            JoystickManager.Initialize();
+        }
+
+
+        private void DetectJoysticksButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Detect and display connected joysticks
+            List<string> joystickNames = JoystickManager.GetJoystickNames();
+
+            // You can display the joystick names in a MessageBox or any other UI element
+            MessageBox.Show($"Connected Joysticks:\n{string.Join("\n", joystickNames)}", "Joystick Detection");
         }
 
         private void SelectFileButton_Click(object sender, RoutedEventArgs e)

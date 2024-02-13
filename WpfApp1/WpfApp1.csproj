@@ -10,6 +10,8 @@
 
     <ItemGroup>
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+      <PackageReference Include="SharpDX" Version="4.2.0" />
+      <PackageReference Include="SharpDX.DirectInput" Version="4.2.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -39,6 +41,9 @@
       </Compile>
       <Compile Update="DeviceInstance.cs">
         <DependentUpon>BindButtonsWindow.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="JoystickManager.cs">
+        <DependentUpon>MainWindow.xaml</DependentUpon>
       </Compile>
     </ItemGroup>
 
