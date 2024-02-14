@@ -118,6 +118,8 @@ namespace WpfApp1
                 
             }
         }
+        
+        
 
         // INotifyPropertyChanged implementation
         public event PropertyChangedEventHandler PropertyChanged;
@@ -126,5 +128,8 @@ namespace WpfApp1
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        
+        
     }
+    
 }

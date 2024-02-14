@@ -1,4 +1,3 @@
-// JoystickManager.cs
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +18,11 @@ public static class JoystickManager
     {
         var joystickGuids = _directInput.GetDevices(DeviceType.Gamepad, DeviceEnumerationFlags.AllDevices)
             .Concat(_directInput.GetDevices(DeviceType.Joystick, DeviceEnumerationFlags.AllDevices))
+            .Where(deviceInstance =>
+            {
+                // Check if the device subtype indicates a Joystick
+                return deviceInstance.Type == SharpDX.DirectInput.DeviceType.Joystick;
+            })
             .Select(deviceInstance => deviceInstance.InstanceGuid)
             .ToList();
 
@@ -54,5 +58,27 @@ public class JoystickDevice
         _joystick.Poll();
         var state = _joystick.GetCurrentState();
         return (state.Buttons.Length > button) && state.Buttons[button];
+    }
+
+    public string CapturePressedButton()
+    {
+        // Poll the joystick for the current state
+        _joystick.Poll();
+        var state = _joystick.GetCurrentState();
+
+        // Check the state for button presses
+        var buttons = state.Buttons;
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            if (buttons[i])
+            {
+                // Button i is pressed
+                // You can return the button name or index here
+                return $"Button {i}";
+            }
+        }
+
+        // No button was pressed
+        return string.Empty;
     }
 }
