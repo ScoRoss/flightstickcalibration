@@ -99,7 +99,9 @@ namespace WpfApp1
 
 
 
-        // get all updates is still not in use 
+        // This code defines a private method called GetAllInputs that takes a JObject called jsonData as input and returns a JArray.
+        // It creates an empty JArray called allInputs, calls a recursive method called GetAllInputsRecursive to populate allInputs with input elements,
+        // and then returns allInputs.
         private JArray GetAllInputs(JObject jsonData)
         {
             // Retrieve all @input elements across all devices
@@ -110,7 +112,9 @@ namespace WpfApp1
             return allInputs;
         }
 
-// collecting all the values from the json file and removing the @
+// This code snippet is a method called GetAllInputsRecursive that recursively
+// collects all the values from a JSON file and removes the "@" symbol. It iterates through the JSON properties and arrays,
+// adding the values to the allInputs array if the property name is "@input".
         private void GetAllInputsRecursive(JToken token, JArray allInputs)
         {
             if (token.Type == JTokenType.Object)
@@ -134,8 +138,9 @@ namespace WpfApp1
             }
         }
 
-        // button click currentlu to be made into a modify input file 
-        // this will be the tricky part and may be put into another class 
+        // This code prompts the user to press a button on a joystick, captures the button input,
+        // and updates a JSON file with the button that was pressed.
+        // It also handles cases where the selected joystick is not found or no joystick is connected. 
         private void PromptUserToPressJoyStickButton(string selectedUiButton, string knownJoystickName)
         {
             // Use MessageBox to prompt the user to press a joystick button
