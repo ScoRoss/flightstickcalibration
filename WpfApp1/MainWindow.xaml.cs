@@ -8,6 +8,7 @@ namespace WpfApp1
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        // Add INotifyPropertyChanged implementation
         private string _selectedFilePath;
 
         public string SelectedFilePath

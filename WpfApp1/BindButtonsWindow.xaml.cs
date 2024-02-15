@@ -13,7 +13,7 @@ namespace WpfApp1
         private DirectInput _directInput;
         private JoystickDevice _selectedJoystick;
         private JsonFileManager _jsonFileManager; // Add this field
-
+        // BindButtonsWindow constructor
         public BindButtonsWindow(string selectedFilePath, string selectedJoystickName)
         {
             InitializeComponent();
@@ -40,7 +40,7 @@ namespace WpfApp1
                 ComboBoxJoysticks.SelectedIndex = 0; // Select the first joystick
             }
         }
-
+        // Method to generate buttons based on JSON content
         private void GenerateButtonsFromJson()
         {
             if (!string.IsNullOrEmpty(_viewModel.JsonContent))
@@ -63,7 +63,7 @@ namespace WpfApp1
                 }
             }
         }
-
+        // Method to generate buttons based on JSON content
         private void GenerateButtonsForInputs(JObject jsonData)
         {
             JArray actionMaps = jsonData["ActionMaps"]?["actionmap"] as JArray;
@@ -110,7 +110,7 @@ namespace WpfApp1
                 }
             }
         }
-
+        // Prompt the user to select a joystick
         private void PromptUserToPressJoyStickButton(string selectedUiButton)
         {
             // Use MessageBox to prompt the user to select a joystick

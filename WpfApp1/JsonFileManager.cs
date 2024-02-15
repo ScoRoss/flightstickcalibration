@@ -10,7 +10,7 @@ public class JsonFileManager
     {
         JsonContent = jsonContent;
     }
-
+    // Updates the JSON content with the selected UI button and captured button
     public void UpdateJsonWithButton(string selectedUiButton, string capturedButton)
     {
         if (!string.IsNullOrEmpty(JsonContent))

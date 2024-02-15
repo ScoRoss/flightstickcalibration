@@ -46,12 +46,13 @@ namespace WpfApp1
                 OnPropertyChanged();
             }
         }
-
+        // BindButtonsWindowViewModel constructor
         public BindButtonsWindowViewModel(string selectedFilePath)
         {
             SelectedFilePath = selectedFilePath;
-        }
-
+        }//LoadJsonContent, which checks if a file exists at the path SelectedFilePath,
+         //reads the file's content as XML
+         //and converts the XML to JSON
         private void LoadJsonContent()
         {
             if (File.Exists(SelectedFilePath))
@@ -82,7 +83,9 @@ namespace WpfApp1
                 Console.WriteLine($"File not found: {SelectedFilePath}");
             }
         }
-
+        // This method takes XML content as input, attempts to convert it to JSON using Newtonsoft.Json,
+        // and returns the resulting JSON content. If an error occurs during the conversion,
+        // it shows a message box with the error message and returns null.
         private string ConvertXmlToJson(string xmlContent)
         {
             try
@@ -101,7 +104,11 @@ namespace WpfApp1
                 return null;
             }
         }
-
+        // Defines a method called SaveJsonContent
+        // that checks if _jsonContent is not empty, 
+        // and if so, it writes the content to a file specified by SelectedFilePath. 
+        // If an error occurs during the write operation, 
+        // it shows a message box with the error message.
         public void SaveJsonContent()
         {
             if (!String.IsNullOrEmpty(_jsonContent))
@@ -120,10 +127,12 @@ namespace WpfApp1
         }
         
         
-
-        // INotifyPropertyChanged implementation
+        // This code snippet defines a method called OnPropertyChanged which is used to notify when a property value has changed.
+        // It uses the [CallerMemberName] attribute to automatically pass the name of the calling property, and then invokes the PropertyChanged event with the property name.
+        // The OnPropertyChanged method is called whenever a property value changes.
         public event PropertyChangedEventHandler PropertyChanged;
-
+        // This code defines a method that raises the PropertyChanged event with the name of the property that changed. 
+        // The [CallerMemberName] attribute allows the method to automatically use the name of the calling property if no name is specified.
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

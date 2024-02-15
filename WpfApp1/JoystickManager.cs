@@ -7,13 +7,13 @@ public static class JoystickManager
 {
     private static DirectInput _directInput;
     private static List<JoystickDevice> _joysticks;
-
+    // Initializes the DirectInput object
     public static void Initialize()
     {
         _directInput = new DirectInput();
         _joysticks = GetConnectedJoysticks();
     }
-
+    // Returns a list of connected joysticks
     private static List<JoystickDevice> GetConnectedJoysticks()
     {
         var joystickGuids = _directInput.GetDevices(DeviceType.Gamepad, DeviceEnumerationFlags.AllDevices)
@@ -34,22 +34,22 @@ public static class JoystickManager
 
         return joystickGuids.Select(guid => new JoystickDevice(_directInput, guid)).ToList();
     }
-
+    // Returns a list of joystick names
     public static List<string> GetJoystickNames()
     {
         return _joysticks.Select(joystick => joystick.Name).ToList();
     }
-
+    // Returns a joystick by its name
     public static JoystickDevice GetJoystickByName(string joystickName)
     {
         return _joysticks.FirstOrDefault(joystick => joystick.Name == joystickName);
     }
 }
-
+// Represents a joystick
 public class JoystickDevice
 {
     private readonly Joystick _joystick;
-
+    // Initializes the joystick
     public JoystickDevice(DirectInput directInput, Guid joystickGuid)
     {
         _joystick = new Joystick(directInput, joystickGuid);
@@ -57,14 +57,14 @@ public class JoystickDevice
     }
 
     public string Name => _joystick.Information.InstanceName;
-
+    // Checks if a button is pressed
     public bool IsButtonDown(int button)
     {
         _joystick.Poll();
         var state = _joystick.GetCurrentState();
         return (state.Buttons.Length > button) && state.Buttons[button];
     }
-
+    // Captures the button that was pressed
     public string CapturePressedButton()
     {
         // Poll the joystick for the current state
