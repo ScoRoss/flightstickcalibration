@@ -11,18 +11,34 @@ namespace WpfApp1
     {
         private readonly BindButtonsWindowViewModel _viewModel;
         private DirectInput _directInput;
+        private JoystickDevice _selectedJoystick;
+        private JsonFileManager _jsonFileManager; // Add this field
 
-        public BindButtonsWindow(string selectedFilePath)
+        public BindButtonsWindow(string selectedFilePath, string selectedJoystickName)
         {
             InitializeComponent();
             _viewModel = new BindButtonsWindowViewModel(selectedFilePath);
             DataContext = _viewModel;
             _directInput = new DirectInput();
+            _jsonFileManager = new JsonFileManager(_viewModel.JsonContent); // Initialize JsonFileManager
 
-
+            // Initialize joystick detection and update the ComboBox
+            UpdateJoystickList();
 
             // Call the method to generate buttons based on JSON content
             GenerateButtonsFromJson();
+        }
+
+        private void UpdateJoystickList()
+        {
+            var joystickNames = JoystickManager.GetJoystickNames();
+            ComboBoxJoysticks.ItemsSource = joystickNames;
+
+            // Automatically select the first joystick, if available
+            if (joystickNames.Count > 0)
+            {
+                ComboBoxJoysticks.SelectedIndex = 0; // Select the first joystick
+            }
         }
 
         private void GenerateButtonsFromJson()
@@ -84,9 +100,7 @@ namespace WpfApp1
 
                                 // Set other properties as needed (e.g., margin)
                                 button.Margin = new Thickness(10); // Adjust the margin as needed
-                                button.Click += (sender, e) => PromptUserToPressJoyStickButton(inputName, "knownJoystickNameValue");
-
-                                
+                                button.Click += (sender, e) => PromptUserToPressJoyStickButton(inputName);
 
                                 // Add the button to your UI (UniformGrid in this case)
                                 Dispatcher.Invoke(() => UniformGridButtons.Children.Add(button));
@@ -97,85 +111,42 @@ namespace WpfApp1
             }
         }
 
-
-
-        // This code defines a private method called GetAllInputs that takes a JObject called jsonData as input and returns a JArray.
-        // It creates an empty JArray called allInputs, calls a recursive method called GetAllInputsRecursive to populate allInputs with input elements,
-        // and then returns allInputs.
-        private JArray GetAllInputs(JObject jsonData)
+        private void PromptUserToPressJoyStickButton(string selectedUiButton)
         {
-            // Retrieve all @input elements across all devices
-            JArray allInputs = new JArray();
+            // Use MessageBox to prompt the user to select a joystick
+            MessageBox.Show("Please select a joystick.", "Select Joystick", MessageBoxButton.OK, MessageBoxImage.Information);
 
-            GetAllInputsRecursive(jsonData, allInputs);
+            // Assuming you have a ComboBox named ComboBoxJoysticks
+            string selectedJoystickName = ComboBoxJoysticks.SelectedItem?.ToString();
 
-            return allInputs;
-        }
+            Debug.WriteLine($"Selected joystick name: {selectedJoystickName}");
 
-// This code snippet is a method called GetAllInputsRecursive that recursively
-// collects all the values from a JSON file and removes the "@" symbol. It iterates through the JSON properties and arrays,
-// adding the values to the allInputs array if the property name is "@input".
-        private void GetAllInputsRecursive(JToken token, JArray allInputs)
-        {
-            if (token.Type == JTokenType.Object)
+            // Obtain the selected joystick using the joystick name
+            _selectedJoystick = JoystickManager.GetJoystickByName(selectedJoystickName);
+
+            if (_selectedJoystick != null)
             {
-                foreach (JProperty property in token.Children<JProperty>())
-                {
-                    if (property.Name == "@input")
-                    {
-                        allInputs.Add(property.Value);
-                    }
-
-                    GetAllInputsRecursive(property.Value, allInputs);
-                }
-            }
-            else if (token.Type == JTokenType.Array)
-            {
-                foreach (JToken arrayItem in token.Children())
-                {
-                    GetAllInputsRecursive(arrayItem, allInputs);
-                }
-            }
-        }
-
-        // This code prompts the user to press a button on a joystick, captures the button input,
-        // and updates a JSON file with the button that was pressed.
-        // It also handles cases where the selected joystick is not found or no joystick is connected. 
-        private void PromptUserToPressJoyStickButton(string selectedUiButton, string knownJoystickName)
-        {
-            // Use MessageBox to prompt the user to press a joystick button
-            MessageBox.Show("Please press the joystick button for " + selectedUiButton, "Press Joystick Button",
-                MessageBoxButton.OK, MessageBoxImage.Information);
-
-            // Obtain the joystickGuid using the known joystick name
-            var joystickGuid = _directInput.GetDevices(DeviceType.Gamepad, DeviceEnumerationFlags.AllDevices)
-                .Concat(_directInput.GetDevices(DeviceType.Joystick, DeviceEnumerationFlags.AllDevices))
-                .Where(deviceInstance =>
-                {
-                    return deviceInstance.Type == SharpDX.DirectInput.DeviceType.Joystick &&
-                           deviceInstance.ProductName == knownJoystickName;
-                })
-                .Select(deviceInstance => deviceInstance.InstanceGuid)
-                .FirstOrDefault();
-
-            // Create an instance of JoystickDevice using the obtained joystickGuid
-            if (joystickGuid != Guid.Empty)
-            {
-                var joystickDevice = new JoystickDevice(_directInput, joystickGuid);
-
                 // Capture the button input from the joystick
-                string capturedButton = joystickDevice.CapturePressedButton();
+                string capturedButton = _selectedJoystick.CapturePressedButton();
+                Debug.WriteLine($"Joystick found: {_selectedJoystick.Name}");
 
-                // Update the JSON file with the button that was pressed using the Newtonsoft.Json library
-                // For example:
-                // _viewModel.UpdateJsonWithButton(selectedUiButton, capturedButton);
+                // Update the JSON file with the button that was pressed using JsonFileManager
+                _jsonFileManager.UpdateJsonWithButton(selectedUiButton, capturedButton);
+
+                // Optionally, you can update the JsonContent in the ViewModel
+                _viewModel.JsonContent = _jsonFileManager.JsonContent;
             }
             else
             {
-                // Handle the case where the selected joystick name is not found or no joystick is connected
-                MessageBox.Show("Selected joystick not found or no joystick connected", "Error", MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                Debug.WriteLine("Selected joystick not found");
+                // Handle the case where the selected joystick name is not found
+                MessageBox.Show("Selected joystick not found", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        private void ComboBoxJoysticks_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Handle the selection changed event if needed
+        }
     }
-}    
+}

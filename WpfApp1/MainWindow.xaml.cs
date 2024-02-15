@@ -54,9 +54,26 @@ namespace WpfApp1
 
         private void BindButtonsButton_Click(object sender, RoutedEventArgs e)
         {
-            // Create an instance of the BindButtonsWindow and pass the selected file path
-            BindButtonsWindow bindButtonsWindow = new BindButtonsWindow(SelectedFilePath);
-            bindButtonsWindow.Show();
+            // Detect and display connected joysticks
+            List<string> joystickNames = JoystickManager.GetJoystickNames();
+
+            // You can display the joystick names in a MessageBox or any other UI element
+            MessageBox.Show($"Connected Joysticks:\n{string.Join("\n", joystickNames)}", "Joystick Detection");
+
+            // Check if there are any joysticks detected
+            if (joystickNames.Count > 0)
+            {
+                // Use the first detected joystick as an example, you can modify this logic as needed
+                string selectedJoystickName = joystickNames[0];
+
+                // Create an instance of the BindButtonsWindow and pass the selected file path and joystick name
+                BindButtonsWindow bindButtonsWindow = new BindButtonsWindow(SelectedFilePath, selectedJoystickName);
+                bindButtonsWindow.Show();
+            }
+            else
+            {
+                MessageBox.Show("No joysticks detected.", "Joystick Detection", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         // INotifyPropertyChanged implementation

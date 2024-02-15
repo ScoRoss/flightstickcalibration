@@ -15,6 +15,11 @@
                 <!-- buttons will be added here dynamically -->
             </UniformGrid>
         </ScrollViewer>
+
+        <!-- ComboBox for joystick selection -->
+        <ComboBox x:Name="ComboBoxJoysticks" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,50,0,0" SelectionChanged="ComboBoxJoysticks_SelectionChanged">
+            <!-- ComboBox items will be populated dynamically -->
+        </ComboBox>
         
         <!-- StackPanel at the bottom for copyright and banner ID -->
         <StackPanel VerticalAlignment="Bottom">

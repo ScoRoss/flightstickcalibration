@@ -39,6 +39,11 @@ public static class JoystickManager
     {
         return _joysticks.Select(joystick => joystick.Name).ToList();
     }
+
+    public static JoystickDevice GetJoystickByName(string joystickName)
+    {
+        return _joysticks.FirstOrDefault(joystick => joystick.Name == joystickName);
+    }
 }
 
 public class JoystickDevice
