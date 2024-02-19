@@ -8,12 +8,24 @@
     ".NETCoreApp,Version=v8.0": {
       "WpfApp1/1.0.0": {
         "dependencies": {
+          "JoystickInput": "1.0.6",
           "Newtonsoft.Json": "13.0.3",
           "SharpDX": "4.2.0",
           "SharpDX.DirectInput": "4.2.0"
         },
         "runtime": {
           "WpfApp1.dll": {}
+        }
+      },
+      "JoystickInput/1.0.6": {
+        "dependencies": {
+          "SharpDX.DirectInput": "4.2.0"
+        },
+        "runtime": {
+          "lib/net461/JoystickInput.dll": {
+            "assemblyVersion": "1.0.6.0",
+            "fileVersion": "1.0.6.0"
+          }
         }
       },
       "Microsoft.NETCore.Platforms/1.1.0": {},
@@ -720,6 +732,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "JoystickInput/1.0.6": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ShmwAvlImFZZVWnx3B+ODrRe9clMoPKK1Lu5l2ngB5fME5GaaTb2FNkUP9COnqrnwl5qdyPcz6GHQ8JQAx57BA==",
+      "path": "joystickinput/1.0.6",
+      "hashPath": "joystickinput.1.0.6.nupkg.sha512"
     },
     "Microsoft.NETCore.Platforms/1.1.0": {
       "type": "package",

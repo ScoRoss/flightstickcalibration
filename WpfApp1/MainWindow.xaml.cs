@@ -70,6 +70,19 @@ namespace WpfApp1
                 // Create an instance of the BindButtonsWindow and pass the selected file path and joystick name
                 BindButtonsWindow bindButtonsWindow = new BindButtonsWindow(SelectedFilePath, selectedJoystickName);
                 bindButtonsWindow.Show();
+
+                // Get the joystick instance by name
+                JoystickDevice selectedJoystick = JoystickManager.GetJoystickByName(selectedJoystickName);
+
+                if (selectedJoystick != null)
+                {
+                    // Optionally, you can monitor button presses for testing
+                    selectedJoystick.DebugMonitorButtonPresses();
+                }
+                else
+                {
+                    MessageBox.Show("Selected joystick not found", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
             else
             {

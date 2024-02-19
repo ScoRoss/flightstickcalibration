@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace WpfApp1
 {
@@ -129,6 +131,63 @@ public class JoystickDevice
     }
 
     // Captures the button that was pressed
+    public List<string> CapturePressedButtons()
+    {
+        // Poll the joystick for the current state
+        _joystick.Poll();
+        var state = _joystick.GetCurrentState();
+
+        // Check the state for button presses
+        var buttons = state.Buttons;
+        var pressedButtons = new List<string>();
+
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            if (buttons[i])
+            {
+                // Add debug statement to check the pressed button
+                Console.WriteLine($"Button {i} is pressed");
+                pressedButtons.Add($"Button {i}");
+            }
+        }
+
+        // No button was pressed
+        if (pressedButtons.Count == 0)
+        {
+            Console.WriteLine("No button was pressed");
+        }
+
+        return pressedButtons;
+    }
+
+
+    // Debug option to register button presses continuously
+    public void DebugMonitorButtonPresses()
+    {
+        Console.WriteLine($"Monitoring button presses for joystick: {Name}");
+
+        // Create a background thread to continuously monitor button presses
+        Task.Run(() =>
+        {
+            while (true)
+            {
+                // Poll the joystick for the current state
+                _joystick.Poll();
+                var state = _joystick.GetCurrentState();
+
+                // Check the state for button presses
+                var buttons = state.Buttons;
+
+                // Print the entire array of button states
+                Console.WriteLine("Button States: " + string.Join(", ", buttons.Select((value, index) => $"Button {index}: {value}")));
+
+                // Introduce a delay to avoid high CPU usage
+                Thread.Sleep(100); // Adjust the delay as needed
+            }
+        });
+    }
+
+
     public string CapturePressedButton()
     {
         // Poll the joystick for the current state
@@ -141,9 +200,9 @@ public class JoystickDevice
         {
             if (buttons[i])
             {
-                // Add debug statement to check the pressed button
-                Console.WriteLine($"Button {i} is pressed");
-                return $"Button {i}";
+                // Add debug statement to check the pressed button along with its index
+                Console.WriteLine($"Button {i} (Index: {i + 1}) is pressed");
+                return $"Button {i} (Index: {i + 1})";
             }
         }
 
@@ -151,4 +210,5 @@ public class JoystickDevice
         Console.WriteLine("No button was pressed");
         return string.Empty;
     }
+
 }

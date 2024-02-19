@@ -2,6 +2,18 @@
   "version": 3,
   "targets": {
     "net8.0-windows7.0": {
+      "JoystickInput/1.0.6": {
+        "type": "package",
+        "dependencies": {
+          "SharpDX.DirectInput": "4.2.0"
+        },
+        "compile": {
+          "lib/net461/JoystickInput.dll": {}
+        },
+        "runtime": {
+          "lib/net461/JoystickInput.dll": {}
+        }
+      },
       "Microsoft.NETCore.Platforms/1.1.0": {
         "type": "package",
         "compile": {
@@ -1333,6 +1345,18 @@
     }
   },
   "libraries": {
+    "JoystickInput/1.0.6": {
+      "sha512": "ShmwAvlImFZZVWnx3B+ODrRe9clMoPKK1Lu5l2ngB5fME5GaaTb2FNkUP9COnqrnwl5qdyPcz6GHQ8JQAx57BA==",
+      "type": "package",
+      "path": "joystickinput/1.0.6",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "joystickinput.1.0.6.nupkg.sha512",
+        "joystickinput.nuspec",
+        "lib/net461/JoystickInput.dll"
+      ]
+    },
     "Microsoft.NETCore.Platforms/1.1.0": {
       "sha512": "kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A==",
       "type": "package",
@@ -4679,6 +4703,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0-windows7.0": [
+      "JoystickInput >= 1.0.6",
       "Newtonsoft.Json >= 13.0.3",
       "SharpDX >= 4.2.0",
       "SharpDX.DirectInput >= 4.2.0"
@@ -4721,6 +4746,10 @@
       "net8.0-windows7.0": {
         "targetAlias": "net8.0-windows",
         "dependencies": {
+          "JoystickInput": {
+            "target": "Package",
+            "version": "[1.0.6, )"
+          },
           "Newtonsoft.Json": {
             "target": "Package",
             "version": "[13.0.3, )"
@@ -4756,5 +4785,17 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100-preview.7.23376.3\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'JoystickInput 1.0.6' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net8.0-windows7.0'. This package may not be fully compatible with your project.",
+      "libraryId": "JoystickInput",
+      "targetGraphs": [
+        "net8.0-windows7.0"
+      ]
+    }
+  ]
 }

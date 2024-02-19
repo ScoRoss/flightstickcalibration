@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "iD55KJgNwuOpYmZPuIphZ2d8o6oAhH/dNNlBY8entNDiSba6NwWHy+3IkgItGyvnCmV3FDXM7DOfT9kYLQIDfg==",
+  "dgSpecHash": "9Dw0Wc4QiGI6JJB9nTJx5f3Bt7q2yx+WxrIBssksAjQcuSQN4XpMIgVqtHC6yyDz1z6/+SUBGEq8Sbn92z66QA==",
   "success": true,
   "projectFilePath": "C:\\Users\\rossl\\OneDrive\\Desktop\\UWS\\Study_Project\\Codestuff\\WpfApp1\\WpfApp1\\WpfApp1.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\rossl\\.nuget\\packages\\joystickinput\\1.0.6\\joystickinput.1.0.6.nupkg.sha512",
     "C:\\Users\\rossl\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\rossl\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
     "C:\\Users\\rossl\\.nuget\\packages\\microsoft.win32.primitives\\4.3.0\\microsoft.win32.primitives.4.3.0.nupkg.sha512",
@@ -81,5 +82,16 @@
     "C:\\Users\\rossl\\.nuget\\packages\\system.xml.readerwriter\\4.3.0\\system.xml.readerwriter.4.3.0.nupkg.sha512",
     "C:\\Users\\rossl\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'JoystickInput 1.0.6' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net8.0-windows7.0'. This package may not be fully compatible with your project.",
+      "libraryId": "JoystickInput",
+      "targetGraphs": [
+        "net8.0-windows7.0"
+      ]
+    }
+  ]
 }
