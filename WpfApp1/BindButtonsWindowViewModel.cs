@@ -1,14 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Input;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using System.Xml;
 using Formatting = Newtonsoft.Json.Formatting;
 using SharpDX.DirectInput;
+using static WpfApp1.RelayCommand;
 
 namespace WpfApp1
 {
@@ -67,17 +70,30 @@ namespace WpfApp1
         // Joystick detection code
         private DirectInput _directInput;
         private List<JoystickDevice> _joysticks;
+        public ICommand SaveCommand { get; }
 
         public BindButtonsWindowViewModel(string selectedFilePath)
         {
             SelectedFilePath = selectedFilePath;
             InitializeJoystick();
+            SaveCommand = new RelayCommand(SaveCommandExecute, SaveCommandCanExecute);
         }
 
         private void InitializeJoystick()
         {
             _directInput = new DirectInput();
             _joysticks = JoystickManager.GetConnectedJoysticks(_directInput);
+        }
+
+        private void SaveCommandExecute()
+        {
+            SaveJsonContent();
+        }
+
+        private bool SaveCommandCanExecute()
+        {
+            // You can add conditions here to determine if the command can be executed
+            return true;
         }
 
         private void LoadJsonContent()
@@ -135,9 +151,7 @@ namespace WpfApp1
             try
             {
                 // Convert JSON to XML using Newtonsoft.Json
-                XmlDocument xmlDoc = JsonConvert.DeserializeXmlNode(jsonContent);
-
-                // Format the XML content
+                XmlDocument xmlDoc = JsonConvert.DeserializeXmlNode(jsonContent, "root");
                 StringWriter sw = new StringWriter();
                 XmlTextWriter xtw = new XmlTextWriter(sw);
                 xmlDoc.WriteTo(xtw);
@@ -152,6 +166,7 @@ namespace WpfApp1
             }
         }
 
+        // Method to save JSON content as XML to a file, handling file selection, conversion, sorting, and potential exceptions
         public void SaveJsonContent()
         {
             if (String.IsNullOrEmpty(_jsonContent))
@@ -162,9 +177,9 @@ namespace WpfApp1
 
             var saveFileDialog = new SaveFileDialog
             {
-                Filter = "JSON Files|*.json|All Files|*.*",
-                DefaultExt = "json",
-                FileName = Path.GetFileName(_selectedFilePath) // Set the default file name
+                Filter = "XML Files|*.xml|All Files|*.*",
+                DefaultExt = "xml",
+                FileName = Path.GetFileNameWithoutExtension(_selectedFilePath) // Set the default file name without extension
             };
 
             if (saveFileDialog.ShowDialog() == true)
@@ -173,19 +188,59 @@ namespace WpfApp1
 
                 try
                 {
-                    File.WriteAllText(_selectedFilePath, _jsonContent);
-                    Debug.WriteLine($"JSON content saved to: {_selectedFilePath}");
+                    // Convert JSON to XML
+                    string xmlContent = ConvertJsonToXml(_jsonContent);
 
-                    MessageBox.Show($"JSON content saved to: {_selectedFilePath}", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    if (String.IsNullOrEmpty(xmlContent))
+                    {
+                        MessageBox.Show("Error converting JSON to XML. Cannot save.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    // Load the XML content into an XmlDocument
+                    XmlDocument xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(xmlContent);
+
+                    // Sort the XML document
+                    SortXml(xmlDoc.DocumentElement);
+
+                    // Save the sorted XML content to the selected file
+                    xmlDoc.Save(_selectedFilePath);
+
+                    Debug.WriteLine($"XML content saved to: {_selectedFilePath}");
+
+                    MessageBox.Show($"XML content saved to: {_selectedFilePath}", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error saving JSON content: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Error saving XML content: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             else
             {
                 MessageBox.Show("Save operation canceled.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private static void SortXml(XmlNode node)
+        {
+            if (node == null || node.ChildNodes.Count == 0)
+            {
+                return;
+            }
+
+            // Sort child nodes alphabetically by name
+            var sortedNodes = node.ChildNodes.Cast<XmlNode>()
+                                  .OrderBy(n => n.Name, StringComparer.OrdinalIgnoreCase)
+                                  .ToList();
+
+            // Remove existing child nodes
+            node.RemoveAll();
+
+            // Add sorted child nodes back to the parent node
+            foreach (var sortedNode in sortedNodes)
+            {
+                node.AppendChild(sortedNode);
             }
         }
 
@@ -209,7 +264,7 @@ namespace WpfApp1
                 if (isButtonPressed)
                 {
                     Debug.WriteLine("Button 0 is pressed on the selected joystick");
-                    
+
                 }
                 else
                 {

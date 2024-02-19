@@ -1,8 +1,6 @@
 using System.Windows;
 using Newtonsoft.Json.Linq;
-using Microsoft.Win32;
 using System;
-using System.IO;
 
 namespace WpfApp1
 {
@@ -89,34 +87,6 @@ namespace WpfApp1
         }
 
         // Method to handle the save button press
-        public void SaveJsonContent()
-        {
-            if (!String.IsNullOrEmpty(JsonContent))
-            {
-                try
-                {
-                    // Create a SaveFileDialog
-                    SaveFileDialog saveFileDialog = new SaveFileDialog();
-                    saveFileDialog.Filter = "JSON Files|*.json|All Files|*.*"; // Specify the file filter
-                    saveFileDialog.DefaultExt = "json"; // Specify the default file extension
-
-                    // Show the SaveFileDialog and get the result
-                    bool? result = saveFileDialog.ShowDialog();
-
-                    // Check if the user selected a file
-                    if (result == true)
-                    {
-                        // Get the selected file name and write the JSON content to the file
-                        string selectedFilePath = saveFileDialog.FileName;
-                        File.WriteAllText(selectedFilePath, JsonContent);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error saving JSON content: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-        }
 
         private JToken FindInputToken(JToken token, string selectedUiButton)
         {
