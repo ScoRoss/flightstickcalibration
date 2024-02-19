@@ -1,119 +1,155 @@
-using Newtonsoft.Json.Linq;
-using System;
 using System.Windows;
+using Newtonsoft.Json.Linq;
+using Microsoft.Win32;
+using System;
+using System.IO;
 
-public class JsonFileManager
+namespace WpfApp1
 {
-    public string JsonContent { get; private set; }
+    public class JsonFileManager
+    {
+        public string JsonContent { get; private set; }
 
-    public JsonFileManager(string jsonContent)
-    {
-        JsonContent = jsonContent;
-    }
-    // Updates the JSON content with the selected UI button and captured button
-    public void UpdateJsonWithButton(string selectedUiButton, string capturedButton)
-    {
-        if (!string.IsNullOrEmpty(JsonContent))
+        public JsonFileManager(string jsonContent)
         {
-            try
+            JsonContent = jsonContent;
+        }
+
+        // Updates the JSON content with the selected UI button and captured button
+        public void UpdateJsonWithButton(string selectedUiButton, string capturedButton)
+        {
+            if (!string.IsNullOrEmpty(JsonContent))
             {
-                // Deserialize JSON content into JObject
-                JObject jsonData = JObject.Parse(JsonContent);
-
-                if (jsonData != null)
+                try
                 {
-                    // Find the input token corresponding to the selectedUiButton
-                    JToken inputToken = FindInputToken(jsonData, selectedUiButton);
+                    // Deserialize JSON content into JObject
+                    JObject jsonData = JObject.Parse(JsonContent);
 
-                    if (inputToken != null)
+                    if (jsonData != null)
                     {
-                        // Check if it's an object or an array
-                        if (inputToken is JObject inputObject)
+                        // Find the input token corresponding to the selectedUiButton
+                        JToken inputToken = FindInputToken(jsonData, selectedUiButton);
+
+                        if (inputToken != null)
                         {
-                            // If it's an object, update the specific property value
-                            JProperty buttonProperty = inputObject.Property("@value");
-                            if (buttonProperty != null)
+                            // Check if it's an object or an array
+                            if (inputToken is JObject inputObject)
                             {
-                                buttonProperty.Value = capturedButton;
-                            }
-                            else
-                            {
-                                // If the property doesn't exist, create a new one
-                                inputObject.Add(new JProperty("@value", capturedButton));
-                            }
-                        }
-                        else if (inputToken is JArray inputArray)
-                        {
-                            // If it's an array, update the first item's value
-                            if (inputArray.Count > 0)
-                            {
-                                JToken firstItem = inputArray[0];
-                                if (firstItem is JObject itemObject)
+                                // If it's an object, update the specific property value
+                                JProperty buttonProperty = inputObject.Property("@value");
+                                if (buttonProperty != null)
                                 {
-                                    JProperty buttonProperty = itemObject.Property("@value");
-                                    if (buttonProperty != null)
+                                    buttonProperty.Value = capturedButton;
+                                }
+                                else
+                                {
+                                    // If the property doesn't exist, create a new one
+                                    inputObject.Add(new JProperty("@value", capturedButton));
+                                }
+                            }
+                            else if (inputToken is JArray inputArray)
+                            {
+                                // If it's an array, update the first item's value
+                                if (inputArray.Count > 0)
+                                {
+                                    JToken firstItem = inputArray[0];
+                                    if (firstItem is JObject itemObject)
                                     {
-                                        buttonProperty.Value = capturedButton;
-                                    }
-                                    else
-                                    {
-                                        // If the property doesn't exist, create a new one
-                                        itemObject.Add(new JProperty("@value", capturedButton));
+                                        JProperty buttonProperty = itemObject.Property("@value");
+                                        if (buttonProperty != null)
+                                        {
+                                            buttonProperty.Value = capturedButton;
+                                        }
+                                        else
+                                        {
+                                            // If the property doesn't exist, create a new one
+                                            itemObject.Add(new JProperty("@value", capturedButton));
+                                        }
                                     }
                                 }
                             }
+
+                            // Save the changes back to the JSON content
+                            JsonContent = jsonData.ToString();
                         }
-
-                        // Save the changes back to the JSON content
-                        JsonContent = jsonData.ToString();
+                        else
+                        {
+                            // Handle the case where the input was not found
+                            MessageBox.Show($"Input '{selectedUiButton}' not found in JSON data.", "Error",
+                                MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                     }
-                    else
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error updating JSON content: {ex.Message}", "Error",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        // Method to handle the save button press
+        public void SaveJsonContent()
+        {
+            if (!String.IsNullOrEmpty(JsonContent))
+            {
+                try
+                {
+                    // Create a SaveFileDialog
+                    SaveFileDialog saveFileDialog = new SaveFileDialog();
+                    saveFileDialog.Filter = "JSON Files|*.json|All Files|*.*"; // Specify the file filter
+                    saveFileDialog.DefaultExt = "json"; // Specify the default file extension
+
+                    // Show the SaveFileDialog and get the result
+                    bool? result = saveFileDialog.ShowDialog();
+
+                    // Check if the user selected a file
+                    if (result == true)
                     {
-                        // Handle the case where the input was not found
-                        MessageBox.Show($"Input '{selectedUiButton}' not found in JSON data.", "Error",
-                            MessageBoxButton.OK, MessageBoxImage.Error);
+                        // Get the selected file name and write the JSON content to the file
+                        string selectedFilePath = saveFileDialog.FileName;
+                        File.WriteAllText(selectedFilePath, JsonContent);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error saving JSON content: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private JToken FindInputToken(JToken token, string selectedUiButton)
+        {
+            // Recursive method to find the token corresponding to the selectedUiButton
+            if (token.Type == JTokenType.Object)
+            {
+                foreach (JProperty property in token.Children<JProperty>())
+                {
+                    if (property.Name == "@input" && property.Value.ToString() == selectedUiButton)
+                    {
+                        return property;
+                    }
+
+                    JToken result = FindInputToken(property.Value, selectedUiButton);
+                    if (result != null)
+                    {
+                        return result;
                     }
                 }
             }
-            catch (Exception ex)
+            else if (token.Type == JTokenType.Array)
             {
-                MessageBox.Show($"Error updating JSON content: {ex.Message}", "Error",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-    }
-
-    private JToken FindInputToken(JToken token, string selectedUiButton)
-    {
-        // Recursive method to find the token corresponding to the selectedUiButton
-        if (token.Type == JTokenType.Object)
-        {
-            foreach (JProperty property in token.Children<JProperty>())
-            {
-                if (property.Name == "@input" && property.Value.ToString() == selectedUiButton)
+                foreach (JToken arrayItem in token.Children())
                 {
-                    return property;
-                }
-
-                JToken result = FindInputToken(property.Value, selectedUiButton);
-                if (result != null)
-                {
-                    return result;
+                    JToken result = FindInputToken(arrayItem, selectedUiButton);
+                    if (result != null)
+                    {
+                        return result;
+                    }
                 }
             }
-        }
-        else if (token.Type == JTokenType.Array)
-        {
-            foreach (JToken arrayItem in token.Children())
-            {
-                JToken result = FindInputToken(arrayItem, selectedUiButton);
-                if (result != null)
-                {
-                    return result;
-                }
-            }
-        }
 
-        return null;
+            return null;
+        }
     }
 }

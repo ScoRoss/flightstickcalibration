@@ -5,11 +5,11 @@ namespace WpfApp1
     // Currently unused 
     public class JoystickHandler
     {
-        private DirectInput directInput;
+        private DirectInput _directInput;
 
         public JoystickHandler()
         {
-            directInput = new DirectInput();
+            _directInput = new DirectInput();
         }
 
         public void HandleJoystick()

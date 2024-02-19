@@ -13,7 +13,7 @@ namespace WpfApp1
         private DirectInput _directInput;
         private JoystickDevice _selectedJoystick;
         private JsonFileManager _jsonFileManager; // Add this field
-        // BindButtonsWindow constructor
+
         public BindButtonsWindow(string selectedFilePath, string selectedJoystickName)
         {
             InitializeComponent();
@@ -29,6 +29,28 @@ namespace WpfApp1
             GenerateButtonsFromJson();
         }
 
+        private void FileButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Call the SaveJsonContent and ConvertJsonToXml methods
+            SaveAndConvertToJson();
+
+            // Optionally, you can display a message to the user or perform additional actions
+            MessageBox.Show("JSON content saved and converted to XML.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void SaveAndConvertToJson()
+        {
+            // Call the SaveJsonContent and ConvertJsonToXml methods
+            _viewModel.SaveJsonContent();
+            string xmlContent = _viewModel.ConvertJsonToXml(_viewModel.JsonContent);
+
+            // Display the XML content (for testing purposes)
+            if (!string.IsNullOrEmpty(xmlContent))
+            {
+                Debug.WriteLine($"Converted XML content:\n{xmlContent}");
+            }
+        }
+
         private void UpdateJoystickList()
         {
             var joystickNames = JoystickManager.GetJoystickNames();
@@ -40,7 +62,7 @@ namespace WpfApp1
                 ComboBoxJoysticks.SelectedIndex = 0; // Select the first joystick
             }
         }
-        // Method to generate buttons based on JSON content
+
         private void GenerateButtonsFromJson()
         {
             if (!string.IsNullOrEmpty(_viewModel.JsonContent))
@@ -63,7 +85,20 @@ namespace WpfApp1
                 }
             }
         }
-        // Method to generate buttons based on JSON content
+
+        private void SaveAndConvertToXmlButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Call the SaveJsonContent and ConvertJsonToXml methods
+            _viewModel.SaveJsonContent();
+            string xmlContent = _viewModel.ConvertJsonToXml(_viewModel.JsonContent);
+
+            // Display the XML content (for testing purposes)
+            if (!string.IsNullOrEmpty(xmlContent))
+            {
+                MessageBox.Show($"Converted XML content:\n{xmlContent}", "Converted to XML", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
         private void GenerateButtonsForInputs(JObject jsonData)
         {
             JArray actionMaps = jsonData["ActionMaps"]?["actionmap"] as JArray;
@@ -110,36 +145,37 @@ namespace WpfApp1
                 }
             }
         }
-        // Prompt the user to select a joystick
+
         private void PromptUserToPressJoyStickButton(string selectedUiButton)
         {
-            // Use MessageBox to prompt the user to select a joystick
-            MessageBox.Show("Please select a joystick.", "Select Joystick", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show($"Please press the joystick button for {selectedUiButton} and confirm the binding.", "Press Joystick Button",
+                MessageBoxButton.OK, MessageBoxImage.Information);
 
-            // Assuming you have a ComboBox named ComboBoxJoysticks
             string selectedJoystickName = ComboBoxJoysticks.SelectedItem?.ToString();
 
             Debug.WriteLine($"Selected joystick name: {selectedJoystickName}");
 
-            // Obtain the selected joystick using the joystick name
             _selectedJoystick = JoystickManager.GetJoystickByName(selectedJoystickName);
 
             if (_selectedJoystick != null)
             {
-                // Capture the button input from the joystick
                 string capturedButton = _selectedJoystick.CapturePressedButton();
-                Debug.WriteLine($"Joystick found: {_selectedJoystick.Name}");
 
-                // Update the JSON file with the button that was pressed using JsonFileManager
-                _jsonFileManager.UpdateJsonWithButton(selectedUiButton, capturedButton);
+                MessageBoxResult result = MessageBox.Show($"Do you want to bind '{selectedUiButton}' to joystick button '{capturedButton}'?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-                // Optionally, you can update the JsonContent in the ViewModel
-                _viewModel.JsonContent = _jsonFileManager.JsonContent;
+                if (result == MessageBoxResult.Yes)
+                {
+                    _jsonFileManager.UpdateJsonWithButton(selectedUiButton, capturedButton);
+                    _viewModel.JsonContent = _jsonFileManager.JsonContent;
+                }
+                else
+                {
+                    MessageBox.Show("Binding change canceled.", "Canceled", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
             }
             else
             {
                 Debug.WriteLine("Selected joystick not found");
-                // Handle the case where the selected joystick name is not found
                 MessageBox.Show("Selected joystick not found", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

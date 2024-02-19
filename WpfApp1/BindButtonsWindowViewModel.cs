@@ -1,11 +1,14 @@
 using System;
-using System.IO;
-using System.Windows;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Windows;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using System.Xml;
 using Formatting = Newtonsoft.Json.Formatting;
+using SharpDX.DirectInput;
 
 namespace WpfApp1
 {
@@ -14,6 +17,8 @@ namespace WpfApp1
         private string _selectedFilePath;
         private string _jsonContent; // Store JSON content as a variable
         private string _loadedFilePath; // Added LoadedFilePath property
+        private string _currentButtonPressed; // New property for currently pressed button
+        private JoystickDevice _selectedJoystick; // Add this field
 
         public string SelectedFilePath
         {
@@ -46,13 +51,35 @@ namespace WpfApp1
                 OnPropertyChanged();
             }
         }
-        // BindButtonsWindowViewModel constructor
+
+        // New property for currently pressed button
+        public string CurrentButtonPressed
+        {
+            get { return _currentButtonPressed; }
+            set
+            {
+                _currentButtonPressed = value;
+                OnPropertyChanged();
+                HandleButtonPress(); // Handle the button press when it changes
+            }
+        }
+
+        // Joystick detection code
+        private DirectInput _directInput;
+        private List<JoystickDevice> _joysticks;
+
         public BindButtonsWindowViewModel(string selectedFilePath)
         {
             SelectedFilePath = selectedFilePath;
-        }//LoadJsonContent, which checks if a file exists at the path SelectedFilePath,
-         //reads the file's content as XML
-         //and converts the XML to JSON
+            InitializeJoystick();
+        }
+
+        private void InitializeJoystick()
+        {
+            _directInput = new DirectInput();
+            _joysticks = JoystickManager.GetConnectedJoysticks(_directInput);
+        }
+
         private void LoadJsonContent()
         {
             if (File.Exists(SelectedFilePath))
@@ -83,9 +110,7 @@ namespace WpfApp1
                 Console.WriteLine($"File not found: {SelectedFilePath}");
             }
         }
-        // This method takes XML content as input, attempts to convert it to JSON using Newtonsoft.Json,
-        // and returns the resulting JSON content. If an error occurs during the conversion,
-        // it shows a message box with the error message and returns null.
+
         private string ConvertXmlToJson(string xmlContent)
         {
             try
@@ -104,41 +129,106 @@ namespace WpfApp1
                 return null;
             }
         }
-        // Defines a method called SaveJsonContent
-        // that checks if _jsonContent is not empty, 
-        // and if so, it writes the content to a file specified by SelectedFilePath. 
-        // If an error occurs during the write operation, 
-        // it shows a message box with the error message.
+
+        public string ConvertJsonToXml(string jsonContent)
+        {
+            try
+            {
+                // Convert JSON to XML using Newtonsoft.Json
+                XmlDocument xmlDoc = JsonConvert.DeserializeXmlNode(jsonContent);
+
+                // Format the XML content
+                StringWriter sw = new StringWriter();
+                XmlTextWriter xtw = new XmlTextWriter(sw);
+                xmlDoc.WriteTo(xtw);
+                string formattedXml = sw.ToString();
+
+                return formattedXml;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error converting JSON to XML: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return null;
+            }
+        }
+
         public void SaveJsonContent()
         {
-            if (!String.IsNullOrEmpty(_jsonContent))
+            if (String.IsNullOrEmpty(_jsonContent))
             {
+                MessageBox.Show("JSON content is empty. Nothing to save.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            var saveFileDialog = new SaveFileDialog
+            {
+                Filter = "JSON Files|*.json|All Files|*.*",
+                DefaultExt = "json",
+                FileName = Path.GetFileName(_selectedFilePath) // Set the default file name
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                _selectedFilePath = saveFileDialog.FileName;
+
                 try
                 {
-                    // Write JSON content back to the file
-                    File.WriteAllText(SelectedFilePath, _jsonContent);
+                    File.WriteAllText(_selectedFilePath, _jsonContent);
+                    Debug.WriteLine($"JSON content saved to: {_selectedFilePath}");
+
+                    MessageBox.Show($"JSON content saved to: {_selectedFilePath}", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Error saving JSON content: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-                
+            }
+            else
+            {
+                MessageBox.Show("Save operation canceled.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
-        
-        
-        // This code snippet defines a method called OnPropertyChanged which is used to notify when a property value has changed.
-        // It uses the [CallerMemberName] attribute to automatically pass the name of the calling property, and then invokes the PropertyChanged event with the property name.
-        // The OnPropertyChanged method is called whenever a property value changes.
+
+        private void HandleButtonPress()
+        {
+            // Handle the button press here, if needed
+            // For example, you can perform additional actions based on the pressed button
+            Debug.WriteLine($"Button Pressed: {CurrentButtonPressed}");
+
+            // Obtain the selected joystick using the joystick name
+            _selectedJoystick = JoystickManager.GetJoystickByName(_currentButtonPressed);
+
+            if (_selectedJoystick != null)
+            {
+                Debug.WriteLine("Selected joystick found");
+
+                // Optionally, you can perform actions with the selected joystick
+                // For example, check if a specific button is pressed on the joystick
+                bool isButtonPressed = _selectedJoystick.IsButtonDown(0); // Replace 0 with the actual button index
+
+                if (isButtonPressed)
+                {
+                    Debug.WriteLine("Button 0 is pressed on the selected joystick");
+                    
+                }
+                else
+                {
+                    Debug.WriteLine("Button 0 is not pressed on the selected joystick");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("Selected joystick not found");
+                // Handle the case where the selected joystick name is not found
+                MessageBox.Show("Selected joystick not found", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
-        // This code defines a method that raises the PropertyChanged event with the name of the property that changed. 
-        // The [CallerMemberName] attribute allows the method to automatically use the name of the calling property if no name is specified.
+
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        
-        
     }
-    
 }
