@@ -150,7 +150,7 @@ public class JoystickDevice
             }
         }
 
-        // No button was pressed
+        // No button was pressedd
         if (pressedButtons.Count == 0)
         {
             Console.WriteLine("No button was pressed");
