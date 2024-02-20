@@ -2,10 +2,10 @@ using SharpDX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace WpfApp1
 {
@@ -104,9 +104,8 @@ namespace WpfApp1
             }
         }
     }
-}
 
-// Represents a joystick
+    // Represents a joystick
 public class JoystickDevice
 {
     private readonly Joystick _joystick;
@@ -160,7 +159,6 @@ public class JoystickDevice
         return pressedButtons;
     }
 
-
     // Debug option to register button presses continuously
     public void DebugMonitorButtonPresses()
     {
@@ -187,17 +185,38 @@ public class JoystickDevice
         });
     }
 
-
     public string CapturePressedButton()
     {
         // Poll the joystick for the current state
         _joystick.Poll();
         var state = _joystick.GetCurrentState();
 
+        // Print the entire state information
+        Console.WriteLine($"Joystick State: {state}");
+
         // Check the state for button presses
         var buttons = state.Buttons;
+
+        // Check if buttons 14, 15, and 16 are pressed and ignore them
+        if (buttons[13] || buttons[14] || buttons[15])
+        {
+            Console.WriteLine("Ignored mode buttons (14, 15, 16) are pressed");
+            return string.Empty; // Ignore the buttons
+        }
+
+        // Process other buttons normally
         for (int i = 0; i < buttons.Length; i++)
         {
+            // Debug output to check button values
+            Console.WriteLine($"Button {i} Value: {buttons[i]}");
+
+            // Ignore buttons beyond index 13
+            if (i >= 13)
+            {
+                continue;
+            }
+
+            // Process buttons up to index 13
             if (buttons[i])
             {
                 // Add debug statement to check the pressed button along with its index
@@ -206,9 +225,10 @@ public class JoystickDevice
             }
         }
 
-        // No button was pressed
-        Console.WriteLine("No button was pressed");
+        // No valid button was pressed
+        Console.WriteLine("No valid button was pressed");
         return string.Empty;
     }
 
+}
 }

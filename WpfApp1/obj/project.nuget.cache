@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "9Dw0Wc4QiGI6JJB9nTJx5f3Bt7q2yx+WxrIBssksAjQcuSQN4XpMIgVqtHC6yyDz1z6/+SUBGEq8Sbn92z66QA==",
+  "dgSpecHash": "YKMMm738xNwVf4lYRLqpzOgHPbP6M8c8ZxTgomxCtAoRUZC50cSX9Hm9k2wvR6KgYvDhT2qusl6Rs/SRBOjvkA==",
   "success": true,
   "projectFilePath": "C:\\Users\\rossl\\OneDrive\\Desktop\\UWS\\Study_Project\\Codestuff\\WpfApp1\\WpfApp1\\WpfApp1.csproj",
   "expectedPackageFiles": [
@@ -28,6 +28,7 @@
     "C:\\Users\\rossl\\.nuget\\packages\\runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "C:\\Users\\rossl\\.nuget\\packages\\sharpdx\\4.2.0\\sharpdx.4.2.0.nupkg.sha512",
     "C:\\Users\\rossl\\.nuget\\packages\\sharpdx.directinput\\4.2.0\\sharpdx.directinput.4.2.0.nupkg.sha512",
+    "C:\\Users\\rossl\\.nuget\\packages\\sharpdx.xinput\\4.2.0\\sharpdx.xinput.4.2.0.nupkg.sha512",
     "C:\\Users\\rossl\\.nuget\\packages\\system.appcontext\\4.3.0\\system.appcontext.4.3.0.nupkg.sha512",
     "C:\\Users\\rossl\\.nuget\\packages\\system.buffers\\4.3.0\\system.buffers.4.3.0.nupkg.sha512",
     "C:\\Users\\rossl\\.nuget\\packages\\system.collections\\4.3.0\\system.collections.4.3.0.nupkg.sha512",

@@ -311,6 +311,23 @@
           }
         }
       },
+      "SharpDX.XInput/4.2.0": {
+        "type": "package",
+        "dependencies": {
+          "NETStandard.Library": "1.6.1",
+          "SharpDX": "4.2.0"
+        },
+        "compile": {
+          "lib/netstandard1.1/SharpDX.XInput.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard1.1/SharpDX.XInput.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
       "System.AppContext/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -1734,6 +1751,30 @@
         "lib/netstandard1.3/SharpDX.DirectInput.xml",
         "sharpdx.directinput.4.2.0.nupkg.sha512",
         "sharpdx.directinput.nuspec"
+      ]
+    },
+    "SharpDX.XInput/4.2.0": {
+      "sha512": "mH3soea+aVUaTuFrkwx+zohklDvCczcgtuTiZJbOCyS5GZ/F9se4BsRJ86xTA9baf0drXYbZQj152PN7lnjiwg==",
+      "type": "package",
+      "path": "sharpdx.xinput/4.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/SharpDX.XInput.dll",
+        "lib/net40/SharpDX.XInput.pdb",
+        "lib/net40/SharpDX.XInput.xml",
+        "lib/net45/SharpDX.XInput.dll",
+        "lib/net45/SharpDX.XInput.pdb",
+        "lib/net45/SharpDX.XInput.xml",
+        "lib/netstandard1.1/SharpDX.XInput.dll",
+        "lib/netstandard1.1/SharpDX.XInput.pdb",
+        "lib/netstandard1.1/SharpDX.XInput.xml",
+        "lib/uap10.0/SharpDX.XInput.dll",
+        "lib/uap10.0/SharpDX.XInput.pdb",
+        "lib/uap10.0/SharpDX.XInput.pri",
+        "lib/uap10.0/SharpDX.XInput.xml",
+        "sharpdx.xinput.4.2.0.nupkg.sha512",
+        "sharpdx.xinput.nuspec"
       ]
     },
     "System.AppContext/4.3.0": {
@@ -4706,7 +4747,8 @@
       "JoystickInput >= 1.0.6",
       "Newtonsoft.Json >= 13.0.3",
       "SharpDX >= 4.2.0",
-      "SharpDX.DirectInput >= 4.2.0"
+      "SharpDX.DirectInput >= 4.2.0",
+      "SharpDX.XInput >= 4.2.0"
     ]
   },
   "packageFolders": {
@@ -4759,6 +4801,10 @@
             "version": "[4.2.0, )"
           },
           "SharpDX.DirectInput": {
+            "target": "Package",
+            "version": "[4.2.0, )"
+          },
+          "SharpDX.XInput": {
             "target": "Package",
             "version": "[4.2.0, )"
           }
