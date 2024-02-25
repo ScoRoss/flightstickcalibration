@@ -132,34 +132,6 @@ namespace WpfApp1
     }
 
     // Captures the button that was pressed
-    public List<string> CapturePressedButtons()
-    {
-        // Poll the joystick for the current state
-        _joystick.Poll();
-        var state = _joystick.GetCurrentState();
-
-        // Check the state for button presses
-        var buttons = state.Buttons;
-        var pressedButtons = new List<string>();
-
-        for (int i = 0; i < buttons.Length; i++)
-        {
-            if (buttons[i])
-            {
-                // Add debug statement to check the pressed button
-                Console.WriteLine($"Button {i} is pressed");
-                pressedButtons.Add($"Button {i}");
-            }
-        }
-
-        // No button was pressedd
-        if (pressedButtons.Count == 0)
-        {
-            Console.WriteLine("No button was pressed");
-        }
-
-        return pressedButtons;
-    }
 
     // Debug option to register button presses continuously
     public void DebugMonitorButtonPresses()
@@ -198,9 +170,9 @@ namespace WpfApp1
 
         // Check the state for button presses
         var buttons = state.Buttons;
-        //!!!!!!!!THIS DOSE NOT WORK!!!!!!!
+
         // Check if buttons 14, 15, and 16 are pressed and ignore them
-        if (buttons[13] || buttons[14] || buttons[15])
+        if (buttons.Length >= 16 && (buttons[13] || buttons[14] || buttons[15]))
         {
             Console.WriteLine("Ignored mode buttons (14, 15, 16) are pressed");
             return string.Empty; // Ignore the buttons
@@ -209,21 +181,21 @@ namespace WpfApp1
         // Process other buttons normally
         for (int i = 0; i < buttons.Length; i++)
         {
-            // Debug output to check button values
-            Console.WriteLine($"Button {i} Value: {buttons[i]}");
-
             // Ignore buttons beyond index 13
             if (i >= 13)
             {
                 continue;
             }
 
-            // Process buttons up to index 13
+            // If the current button is pressed
             if (buttons[i])
             {
+                // Format the button input directly
+                string buttonInput = $"js1_button{i + 1}";
+
                 // Add debug statement to check the pressed button along with its index
                 Console.WriteLine($"Button {i} (Index: {i + 1}) is pressed");
-                return $"Button {i} (Index: {i + 1})";
+                return buttonInput;
             }
         }
 
@@ -232,5 +204,6 @@ namespace WpfApp1
         return string.Empty;
     }
 
-}
+
+    }
 }
