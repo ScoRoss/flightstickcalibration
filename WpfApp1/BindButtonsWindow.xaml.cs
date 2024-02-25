@@ -20,7 +20,8 @@ namespace WpfApp1
             _viewModel = new BindButtonsWindowViewModel(selectedFilePath);
             DataContext = _viewModel;
             _directInput = new DirectInput();
-            _jsonFileManager = new JsonFileManager(_viewModel.JsonContent); // Initialize JsonFileManager
+            _jsonFileManager = new JsonFileManager(_viewModel.JsonContent, _viewModel.XmlContent); 
+
 
             // Initialize joystick detection and update the ComboBox
             JoystickManager.Initialize();
@@ -29,6 +30,7 @@ namespace WpfApp1
             // Call the method to generate buttons based on JSON content
             GenerateButtonsFromJson();
         }
+
 
         private void FileButton_Click(object sender, RoutedEventArgs e)
         {

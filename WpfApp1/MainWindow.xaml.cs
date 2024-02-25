@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
 
@@ -8,8 +9,14 @@ namespace WpfApp1
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        // Add INotifyPropertyChanged implementation
         private string _selectedFilePath;
+        private string _copiedFilePath;
+
+        public string CopiedFilePath
+        {
+            get { return _copiedFilePath; }
+            set { _copiedFilePath = value; }
+        }
 
         public string SelectedFilePath
         {
@@ -24,20 +31,9 @@ namespace WpfApp1
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = this; // Set DataContext to the current instance of MainWindow
+            DataContext = this;
 
-            // Initialize the JoystickManager
             JoystickManager.Initialize();
-        }
-
-
-        private void DetectJoysticksButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Detect and display connected joysticks
-            List<string> joystickNames = JoystickManager.GetJoystickNames();
-
-            // You can display the joystick names in a MessageBox or any other UI element
-            MessageBox.Show($"Connected Joysticks:\n{string.Join("\n", joystickNames)}", "Joystick Detection");
         }
 
         private void SelectFileButton_Click(object sender, RoutedEventArgs e)
@@ -47,36 +43,34 @@ namespace WpfApp1
 
             if (openFileDialog.ShowDialog() == true)
             {
-                // Update the SelectedFilePath property
                 SelectedFilePath = openFileDialog.FileName;
+                CopiedFilePath = SelectedFilePath; // Set CopiedFilePath when file is selected
                 MessageBox.Show($"Selected File: {SelectedFilePath}");
             }
         }
 
         private void BindButtonsButton_Click(object sender, RoutedEventArgs e)
         {
-            // Detect and display connected joysticks
             List<string> joystickNames = JoystickManager.GetJoystickNames();
-
-            // You can display the joystick names in a MessageBox or any other UI element
             MessageBox.Show($"Connected Joysticks:\n{string.Join("\n", joystickNames)}", "Joystick Detection");
 
-            // Check if there are any joysticks detected
             if (joystickNames.Count > 0)
             {
-                // Use the first detected joystick as an example, you can modify this logic as needed
                 string selectedJoystickName = joystickNames[0];
 
-                // Create an instance of the BindButtonsWindow and pass the selected file path and joystick name
+                // Create an instance of JsonFileManager using the constructor that accepts CopiedFilePath
+                JsonFileManager jsonFileManager = new JsonFileManager(null, null)
+                {
+                    CopiedFilePath = CopiedFilePath
+                };
+
                 BindButtonsWindow bindButtonsWindow = new BindButtonsWindow(SelectedFilePath, selectedJoystickName);
                 bindButtonsWindow.Show();
 
-                // Get the joystick instance by name
                 JoystickDevice selectedJoystick = JoystickManager.GetJoystickByName(selectedJoystickName);
 
                 if (selectedJoystick != null)
                 {
-                    // Optionally, you can monitor button presses for testing
                     selectedJoystick.DebugMonitorButtonPresses();
                 }
                 else
@@ -90,7 +84,6 @@ namespace WpfApp1
             }
         }
 
-        // INotifyPropertyChanged implementation
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

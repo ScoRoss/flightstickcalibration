@@ -43,7 +43,16 @@ namespace WpfApp1
                 OnPropertyChanged();
             }
         }
-
+        public string XmlContent
+        {
+            get { return _xmlContent; }
+            set
+            {
+                _xmlContent = value;
+                OnPropertyChanged(); // Make sure to raise the PropertyChanged event when the property changes
+            }
+        }
+        private string _xmlContent;
         // Added LoadedFilePath property
         public string LoadedFilePath
         {

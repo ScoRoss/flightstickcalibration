@@ -89,7 +89,8 @@ namespace WpfApp1
 
                 if (result == MessageBoxResult.Yes)
                 {
-                    jsonFileManager.UpdateJsonWithButton(selectedUiButton, capturedButton);
+                    // Pass the third argument (jsonContent) here
+                    jsonFileManager.UpdateJsonWithButton(selectedUiButton, capturedButton, viewModel.JsonContent);
                     viewModel.JsonContent = jsonFileManager.JsonContent;
                 }
                 else
@@ -103,10 +104,11 @@ namespace WpfApp1
                 MessageBox.Show("Selected joystick not found", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
     }
 
     // Represents a joystick
-public class JoystickDevice
+    public class JoystickDevice
 {
     private readonly Joystick _joystick;
 
