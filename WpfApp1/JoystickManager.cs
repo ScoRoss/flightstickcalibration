@@ -86,7 +86,6 @@ namespace WpfApp1
         _joystick.Acquire();
     }
 
-
     public string Name => _joystick.Information.InstanceName;
 
     // Checks if a button is pressed
@@ -171,7 +170,6 @@ namespace WpfApp1
         Console.WriteLine("No valid button was pressed");
         return string.Empty;
     }
-
 
 
 

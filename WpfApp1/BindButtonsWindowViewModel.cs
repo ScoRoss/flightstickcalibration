@@ -21,7 +21,7 @@ namespace WpfApp1
         private string _jsonContent; // Store JSON content as a variable
         private string _loadedFilePath; // Added LoadedFilePath property
         private string _currentButtonPressed; // New property for currently pressed button
-        private JoystickDevice _selectedJoystick; 
+        private JoystickDevice _selectedJoystick;
 
         public string SelectedFilePath
         {
@@ -188,7 +188,8 @@ namespace WpfApp1
             {
                 Filter = "XML Files|*.xml|All Files|*.*",
                 DefaultExt = "xml",
-                FileName = Path.GetFileNameWithoutExtension(_selectedFilePath) // Set the default file name without extension
+                FileName = Path.GetFileNameWithoutExtension(_selectedFilePath) 
+
             };
 
             if (saveFileDialog.ShowDialog() == true)

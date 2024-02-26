@@ -177,56 +177,56 @@ namespace WpfApp1
 
 
         private string GetButtonCategory(string inputName)
-{
-    // Determine the category of the button based on its input name prefix
-    if (inputName.StartsWith("js1_"))
-    {
-        return "JS1 Buttons"; // Category for js1_ buttons
-    }
-    else if (inputName.StartsWith("js2_"))
-    {
-        return "JS2 Buttons"; // Category for js2_ buttons
-    }
-    else
-    {
-        return "Other Buttons"; // Category for buttons with unknown prefixes
-    }
-}
+        {
+            // Determine the category of the button based on its input name prefix
+            if (inputName.StartsWith("js1_"))
+            {
+                return "JS1 Buttons"; // Category for js1_ buttons
+            }
+            else if (inputName.StartsWith("js2_"))
+            {
+                return "JS2 Buttons"; // Category for js2_ buttons
+            }
+            else
+            {
+                return "Other Buttons"; // Category for buttons with unknown prefixes
+            }
+        }
 
-private void AddButtonToCategory(Button button, string category)
-{
-    // Find or create a stack panel for the category
-    StackPanel categoryPanel = UniformGridButtons.Children
-                                    .OfType<StackPanel>()
-                                    .FirstOrDefault(panel => panel.Tag?.ToString() == category);
+        private void AddButtonToCategory(Button button, string category)
+        {
+            // Find or create a stack panel for the category
+            StackPanel categoryPanel = UniformGridButtons.Children
+                                            .OfType<StackPanel>()
+                                            .FirstOrDefault(panel => panel.Tag?.ToString() == category);
 
-    if (categoryPanel == null)
-    {
-        // Create a new stack panel for the category
-        categoryPanel = new StackPanel();
-        categoryPanel.Tag = category; // Tag the panel with the category name
+            if (categoryPanel == null)
+            {
+                // Create a new stack panel for the category
+                categoryPanel = new StackPanel();
+                categoryPanel.Tag = category; // Tag the panel with the category name
 
-        // Set orientation and other properties of the stack panel
-        categoryPanel.Orientation = Orientation.Vertical;
-        categoryPanel.Margin = new Thickness(10); // Adjust the margin as needed
+                // Set orientation and other properties of the stack panel
+                categoryPanel.Orientation = Orientation.Vertical;
+                categoryPanel.Margin = new Thickness(10); // Adjust the margin as needed
 
-        // Create a label for the category
-        Label categoryLabel = new Label();
-        categoryLabel.Content = category;
-        categoryLabel.FontSize = 18;
-        categoryLabel.FontWeight = FontWeights.Bold;
-        categoryLabel.Margin = new Thickness(0, 0, 0, 5); // Add margin below the label
+                // Create a label for the category
+                Label categoryLabel = new Label();
+                categoryLabel.Content = category;
+                categoryLabel.FontSize = 18;
+                categoryLabel.FontWeight = FontWeights.Bold;
+                categoryLabel.Margin = new Thickness(0, 0, 0, 5); // Add margin below the label
 
-        // Add the label to the category panel
-        categoryPanel.Children.Add(categoryLabel);
+                // Add the label to the category panel
+                categoryPanel.Children.Add(categoryLabel);
 
-        // Add the category panel to the UniformGrid
-        UniformGridButtons.Children.Add(categoryPanel);
-    }
+                // Add the category panel to the UniformGrid
+                UniformGridButtons.Children.Add(categoryPanel);
+            }
 
-    // Add the button to the category panel
-    categoryPanel.Children.Add(button);
-}
+            // Add the button to the category panel
+            categoryPanel.Children.Add(button);
+        }
 
 
 

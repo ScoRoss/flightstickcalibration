@@ -3,17 +3,16 @@ using System.Windows.Input;
 
 namespace WpfApp1
 {
-    using System;
-    using System.Windows.Input;
+
 
     public class RelayCommand : ICommand
     {
-        private readonly Action _execute;
+        private readonly System.Action _execute;
         private readonly Func<bool> _canExecute;
 
         public event EventHandler CanExecuteChanged;
 
-        public RelayCommand(Action execute, Func<bool> canExecute = null)
+        public RelayCommand(System.Action execute, Func<bool> canExecute = null)
         {
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));
             _canExecute = canExecute;
@@ -26,8 +25,9 @@ namespace WpfApp1
 
         public void Execute(object parameter)
         {
-            _execute();
+            _execute.Invoke();
         }
+
 
         public void RaiseCanExecuteChanged()
         {
