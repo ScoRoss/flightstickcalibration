@@ -9,7 +9,7 @@ using System.Windows.Controls;
 
 namespace WpfApp1
 {
-    public static class JoystickManager
+    public class JoystickManager
     {
         private static DirectInput _directInput;
         private static List<JoystickDevice> _joysticks;
@@ -70,40 +70,7 @@ namespace WpfApp1
             return joystick;
         }
 
-        public static void PromptUserToPressJoyStickButton(string selectedUiButton, ComboBox comboBox, JsonFileManager jsonFileManager, BindButtonsWindowViewModel viewModel)
-        {
-            MessageBox.Show($"Please press the joystick button for {selectedUiButton} and confirm the binding.", "Press Joystick Button",
-                MessageBoxButton.OK, MessageBoxImage.Information);
 
-            string selectedJoystickName = comboBox.SelectedItem?.ToString();
-
-            Console.WriteLine($"Selected joystick name: {selectedJoystickName}");
-
-            JoystickDevice selectedJoystick = GetJoystickByName(selectedJoystickName);
-
-            if (selectedJoystick != null)
-            {
-                string capturedButton = selectedJoystick.CapturePressedButton();
-
-                MessageBoxResult result = MessageBox.Show($"Do you want to bind '{selectedUiButton}' to joystick button '{capturedButton}'?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-                if (result == MessageBoxResult.Yes)
-                {
-                    // Pass the third argument (jsonContent) here
-                    jsonFileManager.UpdateJsonWithButton(selectedUiButton, capturedButton, viewModel.JsonContent);
-                    viewModel.JsonContent = jsonFileManager.JsonContent;
-                }
-                else
-                {
-                    MessageBox.Show("Binding change canceled.", "Canceled", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-            }
-            else
-            {
-                Console.WriteLine("Selected joystick not found");
-                MessageBox.Show("Selected joystick not found", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
 
     }
 
@@ -118,6 +85,7 @@ namespace WpfApp1
         _joystick = new Joystick(directInput, joystickGuid);
         _joystick.Acquire();
     }
+
 
     public string Name => _joystick.Information.InstanceName;
 
@@ -203,6 +171,8 @@ namespace WpfApp1
         Console.WriteLine("No valid button was pressed");
         return string.Empty;
     }
+
+
 
 
     }
