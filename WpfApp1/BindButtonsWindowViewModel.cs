@@ -21,7 +21,7 @@ namespace WpfApp1
         private string _jsonContent; // Store JSON content as a variable
         private string _loadedFilePath; // Added LoadedFilePath property
         private string _currentButtonPressed; // New property for currently pressed button
-        private JoystickDevice _selectedJoystick; // Add this field
+        private JoystickDevice _selectedJoystick; 
 
         public string SelectedFilePath
         {
