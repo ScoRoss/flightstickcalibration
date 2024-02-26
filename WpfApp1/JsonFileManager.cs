@@ -71,115 +71,31 @@ namespace WpfApp1
                     // Load XML content from the window
                     XDocument xmlDoc = XDocument.Parse(xmlContentFromWindow);
 
-                    if (xmlDoc != null)
+                    // Locate the specific rebind element to update
+                    var rebindElementToUpdate = xmlDoc.Descendants("rebind")
+                        .FirstOrDefault(el => (string)el.Attribute("input") == selectedUiButton);
+
+                    if (rebindElementToUpdate != null)
                     {
-                        // Debug statement: Print the XML content to the console
-                        Debug.WriteLine($"Original XML Content: {xmlDoc}");
+                        // Update the 'input' attribute with the captured button
+                        rebindElementToUpdate.SetAttributeValue("input", $"js1_{capturedButton}");
 
-                        // Find the rebind element corresponding to the selectedUiButton
-                        XElement rebindElement = FindRebindElement(xmlDoc.Root, selectedUiButton);
+                        // Debug print or log
+                        Debug.WriteLine($"Updated XML with new button: {capturedButton} for selected UI button: {selectedUiButton}");
 
-                        if (rebindElement != null)
-                        {
-                            // Print the information in the debug console
-                            Debug.WriteLine($"Updating XML for '{selectedUiButton}' - Changing button to '{capturedButton}'");
-
-                            // Update the XML content using the UpdateXmlAttributeValue method
-                            xmlContentFromWindow = UpdateXmlAttributeValue(xmlDoc, selectedUiButton, $"js1_{capturedButton}");
-
-                            // Debug statement: Print the modified XML content to the console
-                            Debug.WriteLine($"Modified XML Content: {xmlContentFromWindow}");
-
-                            // Optionally, you can save the modified XML content to a temporary file or perform other actions
-                        }
-                        else
-                        {
-                            // Handle the case where the rebind element was not found
-                            MessageBox.Show($"Rebind element for '{selectedUiButton}' not found in XML data.", "Error",
-                                MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
+                        // Convert updated XML back to string and possibly save or use as needed
+                        xmlContentFromWindow = xmlDoc.ToString();
+                        
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Rebind element for '{selectedUiButton}' not found in XML data.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error updating XML content: {ex.Message}", "Error",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Error updating XML content: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-            }
-        }
-
-        private string UpdateXmlAttributeValue(XDocument xmlDoc, string selectedUiButton, string newValue)
-        {
-            try
-            {
-                // Find the rebind element corresponding to the selectedUiButton
-                var rebindElement = xmlDoc.Root
-                    .Elements("actionmap")
-                    .Elements("action")
-                    .Elements("rebind")
-                    .Where(rebind => (string)rebind.Attribute("input") == selectedUiButton)
-                    .FirstOrDefault();
-
-                if (rebindElement != null)
-                {
-                    // Print the information in the debug console
-                    Debug.WriteLine($"Updating XML for '{selectedUiButton}' - Changing button to '{newValue}'");
-
-                    // Update the input attribute value
-                    rebindElement.SetAttributeValue("input", newValue);
-
-                    // Save the changes back to the XML content
-                    return xmlDoc.ToString();
-                }
-                else
-                {
-                    // Handle the case where the rebind element was not found
-                    MessageBox.Show($"Rebind element for '{selectedUiButton}' not found in XML data.", "Error",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error updating XML content: {ex.Message}", "Error",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-
-            return xmlDoc.ToString(); // Return the original XML if an error occurs
-        }
-
-        // Method to handle the save button press for JSON file
-        public void SaveJsonToFile(string filePath = null)
-        {
-            if (string.IsNullOrEmpty(JsonContent))
-            {
-                MessageBox.Show("JSON content is empty. Cannot save.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            try
-            {
-                // If filePath is not specified, show the save dialog
-                if (string.IsNullOrEmpty(filePath))
-                {
-                    var saveFileDialog = new Microsoft.Win32.SaveFileDialog
-                    {
-                        Filter = JsonFilter,
-                        DefaultExt = ".json"
-                    };
-
-                    if (saveFileDialog.ShowDialog() == true)
-                    {
-                        filePath = saveFileDialog.FileName;
-                    }
-                }
-
-                // Save JSON content to the specified file
-                File.WriteAllText(filePath, JsonContent);
-                MessageBox.Show($"JSON content saved to {filePath}", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error saving JSON content: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -276,9 +192,6 @@ namespace WpfApp1
             return null;
         }
 
-        public void UpdateJsonWithButton(string selectedUiButton, string capturedButton, string viewModelJsonContent)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }
