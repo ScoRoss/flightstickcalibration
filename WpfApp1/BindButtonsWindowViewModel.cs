@@ -188,8 +188,7 @@ namespace WpfApp1
             {
                 Filter = "XML Files|*.xml|All Files|*.*",
                 DefaultExt = "xml",
-                FileName = Path.GetFileNameWithoutExtension(_selectedFilePath) 
-
+                FileName = Path.GetFileNameWithoutExtension(_selectedFilePath) // Set the default file name without extension
             };
 
             if (saveFileDialog.ShowDialog() == true)

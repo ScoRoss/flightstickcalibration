@@ -100,31 +100,7 @@ namespace WpfApp1
 
     // Captures the button that was pressed
 
-    // Debug option to register button presses continuously
-    public void DebugMonitorButtonPresses()
-    {
-        Console.WriteLine($"Monitoring button presses for joystick: {Name}");
 
-        // Create a background thread to continuously monitor button presses
-        Task.Run(() =>
-        {
-            while (true)
-            {
-                // Poll the joystick for the current state
-                _joystick.Poll();
-                var state = _joystick.GetCurrentState();
-
-                // Check the state for button presses
-                var buttons = state.Buttons;
-
-                // Print the entire array of button states
-                Console.WriteLine("Button States: " + string.Join(", ", buttons.Select((value, index) => $"Button {index}: {value}")));
-
-                // Introduce a delay to avoid high CPU usage
-                Thread.Sleep(100); // Adjust the delay as needed
-            }
-        });
-    }
 
     public string CapturePressedButton()
     {

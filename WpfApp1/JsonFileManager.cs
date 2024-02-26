@@ -46,8 +46,8 @@ namespace WpfApp1
                 if (!string.IsNullOrEmpty(CopiedFilePath))
                 {
                     // Read the content of the copied XML file
-                    string xmlContentFromWindow = File.ReadAllText(CopiedFilePath);
-                    return xmlContentFromWindow;
+                    string xmlContent = File.ReadAllText(CopiedFilePath);
+                    return xmlContent;
                 }
                 else
                 {
@@ -85,7 +85,7 @@ namespace WpfApp1
 
                         // Convert updated XML back to string and possibly save or use as needed
                         xmlContentFromWindow = xmlDoc.ToString();
-                        
+
                     }
                     else
                     {

@@ -71,7 +71,7 @@ namespace WpfApp1
 
                 if (selectedJoystick != null)
                 {
-                    selectedJoystick.DebugMonitorButtonPresses();
+                    
                 }
                 else
                 {
