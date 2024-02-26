@@ -12,16 +12,17 @@ namespace WpfApp1
         private readonly BindButtonsWindowViewModel _viewModel;
         private DirectInput _directInput;
         private JoystickDevice _selectedJoystick;
-        private JsonFileManager _jsonFileManager; // Add this field
-
+        private JsonFileManager _jsonFileManager;
+        private JoystickManager _joystickManager;
+        private JoystickDevice _selectedJoystickDevice;
         public BindButtonsWindow(string selectedFilePath, string selectedJoystickName)
         {
             InitializeComponent();
             _viewModel = new BindButtonsWindowViewModel(selectedFilePath);
             DataContext = _viewModel;
             _directInput = new DirectInput();
-            _jsonFileManager = new JsonFileManager(_viewModel.JsonContent, _viewModel.XmlContent); 
-
+            _jsonFileManager = new JsonFileManager(_viewModel.JsonContent, _viewModel.XmlContent);
+            _joystickManager = new JoystickManager();
 
             // Initialize joystick detection and update the ComboBox
             JoystickManager.Initialize();
@@ -89,57 +90,93 @@ namespace WpfApp1
             }
         }
 
-private void GenerateButtonsForInputs(JObject jsonData)
-{
-    JArray actionMaps = jsonData["ActionMaps"]?["actionmap"] as JArray;
-
-    if (actionMaps != null)
-    {
-        foreach (JObject actionMap in actionMaps)
+        private void GenerateButtonsForInputs(JObject jsonData)
         {
-            JArray actions = actionMap["action"] as JArray;
+            JArray actionMaps = jsonData["ActionMaps"]?["actionmap"] as JArray;
 
-            if (actions != null)
+            if (actionMaps != null)
             {
-                foreach (JObject action in actions)
+                foreach (JObject actionMap in actionMaps)
                 {
-                    string inputName = action["rebind"]?["@input"]?.ToString();
-                    inputName = inputName?.TrimStart('@'); // Remove @ symbol from the beginning, if present
+                    JArray actions = actionMap["action"] as JArray;
 
-                    string name = action["@name"]?.ToString();
-
-                    if (!string.IsNullOrEmpty(inputName))
+                    if (actions != null)
                     {
-                        // Add debug output to check if the correct data is being retrieved
-                        Debug.WriteLine($"Found Input: {inputName}, Name: {name}");
+                        foreach (JObject action in actions)
+                        {
+                            string inputName = action["rebind"]?["@input"]?.ToString();
+                            inputName = inputName?.TrimStart('@'); // Remove @ symbol from the beginning, if present
 
-                        // Create a button for each input with some margin for spacing
-                        Button button = new Button();
+                            string name = action["@name"]?.ToString();
 
-                        // Make the button content the concatenated input and name
-                        button.Content = $"{inputName}\n{name}";
+                            if (!string.IsNullOrEmpty(inputName))
+                            {
+                                Debug.WriteLine($"Found Input: {inputName}, Name: {name}");
 
-                        // Set the font size and style as needed
-                        button.FontSize = 16;
-                        button.FontWeight = FontWeights.Bold;
+                                Button button = new Button
+                                {
+                                    Content = $"{inputName}\n{name}",
+                                    FontSize = 16,
+                                    FontWeight = FontWeights.Bold,
+                                    Margin = new Thickness(10),
+                                    Tag = inputName // Use Tag to store the inputName for later retrieval
+                                };
 
-                        // Set other properties as needed (e.g., margin)
-                        button.Margin = new Thickness(10); // Adjust the margin as needed
-                        button.Click += (sender, e) => PromptUserToPressJoyStickButton(inputName);
+                                // Register the Click event handler
+                                button.Click += Button_Click;
 
-                        // Determine the category of the button based on its input name
-                        string category = GetButtonCategory(inputName);
-
-                        // Add the button to the corresponding section based on category
-                        AddButtonToCategory(button, category);
+                                string category = GetButtonCategory(inputName);
+                                AddButtonToCategory(button, category);
+                            }
+                        }
                     }
                 }
             }
         }
-    }
-}
+        private void PromptUserToPressJoyStickButton(string selectedUiButton)
+        {
+            // Assume ComboBoxJoysticks holds the name of the selected joystick
+            string selectedJoystickName = ComboBoxJoysticks.SelectedItem.ToString();
 
-private string GetButtonCategory(string inputName)
+            // Retrieve the JoystickDevice instance for the selected joystick
+            var selectedJoystick = JoystickManager.GetJoystickByName(selectedJoystickName);
+
+            if (selectedJoystick != null)
+            {
+                string capturedButton = selectedJoystick.CapturePressedButton();
+
+                if (!string.IsNullOrEmpty(capturedButton))
+                {
+                    // Assuming _jsonFileManager is correctly initialized and can update the JSON/XML
+                    _jsonFileManager.UpdateXmlWithButton(selectedUiButton, capturedButton, _viewModel.XmlContent);
+
+                    // Refresh UI or notify the user as needed...
+                    MessageBox.Show($"Button '{capturedButton}' captured for action '{selectedUiButton}'.", "Capture Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show("No button press detected.", "Capture Failed", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No joystick device selected.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            if (button != null && button.Tag is string selectedUiButton)
+            {
+                // Directly call PromptUserToPressJoyStickButton with the selected UI button's input name
+                PromptUserToPressJoyStickButton(selectedUiButton);
+            }
+        }
+
+
+
+        private string GetButtonCategory(string inputName)
 {
     // Determine the category of the button based on its input name prefix
     if (inputName.StartsWith("js1_"))
@@ -192,10 +229,7 @@ private void AddButtonToCategory(Button button, string category)
 }
 
 
-        private void PromptUserToPressJoyStickButton(string selectedUiButton)
-        {
-            JoystickManager.PromptUserToPressJoyStickButton(selectedUiButton, ComboBoxJoysticks, _jsonFileManager, _viewModel);
-        }
+
 
         private void ComboBoxJoysticks_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
