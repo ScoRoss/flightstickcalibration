@@ -5,7 +5,7 @@
     <Grid>
         <Grid.Background>
             <!-- Set your desired background image here -->
-            <ImageBrush ImageSource="C:\Users\rossl\source\repos\ScoRoss\flightstickcalibration\WpfApp1\splashimage\banubigboi.png" Stretch="UniformToFill"/>
+            <ImageBrush ImageSource="pack://application:,,,/splashimage/banubigboi.png" Stretch="UniformToFill"/>
         </Grid.Background>
 
         <!-- Create a grid with two rows -->
