@@ -11,8 +11,10 @@
         <!-- Create a grid with two rows -->
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/> <!-- Row for "File" menu -->
-                <RowDefinition Height="*"/>    <!-- Row for dynamic UI elements -->
+                <RowDefinition Height="Auto"/>
+                <!-- Row for "File" menu -->
+                <RowDefinition Height="*"/>
+                <!-- Row for dynamic UI elements -->
             </Grid.RowDefinitions>
 
             <!-- Menu -->
@@ -26,7 +28,7 @@
             <!-- Dynamic UI elements in the second row -->
             <Grid Grid.Row="1">
                 <TextBlock Text="{Binding LoadedFilePath}" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,30,0,0"/>
-        
+
                 <!-- Wrap the UniformGrid in a ScrollViewer -->
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                     <UniformGrid x:Name="UniformGridButtons" Columns="3" HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -35,7 +37,7 @@
                 </ScrollViewer>
 
                 <!-- ComboBox for joystick selection -->
-                <ComboBox x:Name="ComboBoxJoysticks" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,80,0,0" SelectionChanged="ComboBoxJoysticks_SelectionChanged">
+                <ComboBox x:Name="ComboBoxJoysticks" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="744,0,0,0" SelectionChanged="ComboBoxJoysticks_SelectionChanged">
                     <!-- ComboBox items will be populated dynamically -->
                 </ComboBox>
 

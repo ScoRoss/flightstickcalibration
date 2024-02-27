@@ -1,6 +1,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using SharpDX.DirectInput;
@@ -15,6 +16,8 @@ namespace WpfApp1
         private JsonFileManager _jsonFileManager;
         private JoystickManager _joystickManager;
         private JoystickDevice _selectedJoystickDevice;
+        private XmlFileHandler _xmlFileHandler;
+
         public BindButtonsWindow(string selectedFilePath, string selectedJoystickName)
         {
             InitializeComponent();
@@ -28,10 +31,19 @@ namespace WpfApp1
             JoystickManager.Initialize();
             UpdateJoystickList();
 
+            // Pass the required arguments to XmlFileHandler constructor
+            _xmlFileHandler = new XmlFileHandler(selectedFilePath);
+
+            // Call the method to generate buttons based on JSON content
+            GenerateButtonsFromJson();
+
+            // Initialize joystick detection and update the ComboBox
+            JoystickManager.Initialize();
+            UpdateJoystickList();
+
             // Call the method to generate buttons based on JSON content
             GenerateButtonsFromJson();
         }
-
 
         private void FileButton_Click(object sender, RoutedEventArgs e)
         {
@@ -84,8 +96,7 @@ namespace WpfApp1
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error generating buttons: {ex.Message}", "Error", MessageBoxButton.OK,
-                        MessageBoxImage.Error);
+                    MessageBox.Show($"Error generating buttons: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -133,25 +144,43 @@ namespace WpfApp1
                 }
             }
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            if (button != null && button.Tag is string selectedUiButton)
+            {
+                // Prompt the user to press the joystick button and update XML content
+                PromptUserToPressJoyStickButton(selectedUiButton);
+            }
+        }
+
         private void PromptUserToPressJoyStickButton(string selectedUiButton)
         {
+            // Prompt the user to click and hold a button
+            MessageBox.Show("Please click and hold the button on the joystick you want to bind to.", "Button Binding", MessageBoxButton.OK, MessageBoxImage.Information);
+
             // Assume ComboBoxJoysticks holds the name of the selected joystick
-            string selectedJoystickName = ComboBoxJoysticks.SelectedItem.ToString();
+            string selectedJoystickName = ComboBoxJoysticks.SelectedItem?.ToString();
 
             // Retrieve the JoystickDevice instance for the selected joystick
             var selectedJoystick = JoystickManager.GetJoystickByName(selectedJoystickName);
 
             if (selectedJoystick != null)
             {
+                // Capture the pressed button
                 string capturedButton = selectedJoystick.CapturePressedButton();
 
                 if (!string.IsNullOrEmpty(capturedButton))
                 {
-                    // Assuming _jsonFileManager is correctly initialized and can update the JSON/XML
-                    _jsonFileManager.UpdateXmlWithButton(selectedUiButton, capturedButton, _viewModel.XmlContent);
+                    // Prompt the user to confirm the binding
+                    var result = MessageBox.Show($"Do you want to bind button '{capturedButton}' to action '{selectedUiButton}'?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-                    // Refresh UI or notify the user as needed...
-                    MessageBox.Show($"Button '{capturedButton}' captured for action '{selectedUiButton}'.", "Capture Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        // Update the XML with the captured button
+                        _viewModel.UpdateXmlWithButton(selectedUiButton, capturedButton);
+                    }
                 }
                 else
                 {
@@ -163,18 +192,6 @@ namespace WpfApp1
                 MessageBox.Show("No joystick device selected.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            var button = sender as Button;
-            if (button != null && button.Tag is string selectedUiButton)
-            {
-                // Directly call PromptUserToPressJoyStickButton with the selected UI button's input name
-                PromptUserToPressJoyStickButton(selectedUiButton);
-            }
-        }
-
-
 
         private string GetButtonCategory(string inputName)
         {
@@ -227,9 +244,6 @@ namespace WpfApp1
             // Add the button to the category panel
             categoryPanel.Children.Add(button);
         }
-
-
-
 
         private void ComboBoxJoysticks_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

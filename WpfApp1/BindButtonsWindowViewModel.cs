@@ -1,17 +1,16 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Input;
+using System.Xml;
 using Microsoft.Win32;
 using Newtonsoft.Json;
-using System.Xml;
 using Formatting = Newtonsoft.Json.Formatting;
 using SharpDX.DirectInput;
 using static WpfApp1.RelayCommand;
+using System.Windows.Input;
 
 namespace WpfApp1
 {
@@ -22,6 +21,7 @@ namespace WpfApp1
         private string _loadedFilePath; // Added LoadedFilePath property
         private string _currentButtonPressed; // New property for currently pressed button
         private JoystickDevice _selectedJoystick;
+        private XmlFileHandler _xmlFileHandler; 
 
         public string SelectedFilePath
         {
@@ -43,16 +43,19 @@ namespace WpfApp1
                 OnPropertyChanged();
             }
         }
+        private string _xmlContent;
         public string XmlContent
         {
-            get { return _xmlContent; }
+            get => _xmlContent;
             set
             {
                 _xmlContent = value;
                 OnPropertyChanged(); // Make sure to raise the PropertyChanged event when the property changes
             }
         }
-        private string _xmlContent;
+
+        
+
         // Added LoadedFilePath property
         public string LoadedFilePath
         {
@@ -84,9 +87,12 @@ namespace WpfApp1
         public BindButtonsWindowViewModel(string selectedFilePath)
         {
             SelectedFilePath = selectedFilePath;
+            _xmlFileHandler = new XmlFileHandler(selectedFilePath, null); // Direct initialization
             InitializeJoystick();
-            SaveCommand = new RelayCommand(SaveCommandExecute, SaveCommandCanExecute);
+            // InitializeXmlFileManager(selectedFilePath); // This can be removed if you're directly initializing here
+            SaveCommand = new RelayCommand(SaveCommandExecute, SaveCommandCanExecute); ;
         }
+
 
         private void InitializeJoystick()
         {
@@ -104,6 +110,52 @@ namespace WpfApp1
             // You can add conditions here to determine if the command can be executed
             return true;
         }
+        public XmlFileHandler XmlFileHandler { get; set; }
+        public void UpdateXmlWithButton(string selectedUiButton, string capturedButton)
+        {
+            // Ensure we have the latest XML content before updating
+            var currentXmlContent = _xmlFileHandler.GetXmlContent();
+
+            // Check if currentXmlContent is not empty or null after the call
+            if (!string.IsNullOrEmpty(currentXmlContent))
+            {
+                // Now that we have the latest XML content, we can update it
+                _xmlFileHandler.UpdateXmlWithButton(selectedUiButton, capturedButton, currentXmlContent);
+
+                // Optionally, save the updated XmlContent back to the file
+                SaveUpdatedXmlContent(_xmlFileHandler.XmlContent);
+            }
+            else
+            {
+                MessageBox.Show("Unable to load XML content for updating.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void SaveUpdatedXmlContent(string xmlContent)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(_xmlFileHandler._copiedFilePath) && !string.IsNullOrEmpty(xmlContent))
+                {
+                    File.WriteAllText(_xmlFileHandler._copiedFilePath, xmlContent);
+                    MessageBox.Show("XML content updated and saved successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show("No file path specified or content is empty, cannot save.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving updated XML content: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        private void InitializeXmlFileManager(string selectedFilePath)
+        {
+            XmlFileHandler = new XmlFileHandler(selectedFilePath, null); 
+        }
+
+        
 
         private void LoadJsonContent()
         {
