@@ -9,11 +9,11 @@
     
     <!-- Set the application icon -->
     <Window.Icon>
-        <BitmapImage UriSource="pack://application:,,,/splashimage/png/logo-black.png"/>
+        <BitmapImage UriSource="C:\Users\rossl\source\repos\ScoRoss\flightstickcalibration\WpfApp1\splashimage\png\logo-black.png"/>
     </Window.Icon>
 
     <Window.Background>
-        <ImageBrush ImageSource="pack://application:,,,/splashimage/DRAKE.PNG"/>
+        <ImageBrush ImageSource="C:\Users\rossl\source\repos\ScoRoss\flightstickcalibration\WpfApp1\splashimage\DRAKE.PNG"/>
     </Window.Background>
 
     <Grid>
@@ -24,8 +24,7 @@
         </Grid.RowDefinitions>
 
         <!-- Logo Image for display -->
-        <Image Source="pack://application:,,,/splashimage/anystick-high-resolution-logo-black-transparent.png" Width="150" Height="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,20"/>
-
+        <Image Source="C:\Users\rossl\source\repos\ScoRoss\flightstickcalibration\WpfApp1\splashimage\png\anystick-high-resolution-logo-black-transparent.png" Width="150" Height="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,20"/>
 
         <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,20">
             <Button Content="Select File" Width="100" Height="30" Margin="0,0,0,5" Click="SelectFileButton_Click"/>
