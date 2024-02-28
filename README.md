@@ -81,4 +81,3 @@ The code-behind for the application's main window, `MainWindow.xaml.cs` orchestr
 
 ---
 
-This template aims to guide you in documenting the specified components of your FlightStick Calibration application. For each section, expand on the provided structure with specific details, examples, and explanations of how each component contributes to the overall functionality of your application. Remember, good documentation is clear, concise, and informative, making it easier for others (and future you) to understand and maintain the project.
