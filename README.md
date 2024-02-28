@@ -22,7 +22,7 @@ This document provides an overview of the key components within the FlightStick 
 
 - `InitializeComponent`: Initializes the window components.
 - `OnBindButtonClick`: Handles the logic when the "Bind" button is clicked.
-- `FillInAdditionalMethodsHere`: Other methods specific to this file.
+- 
 
 ---
 
@@ -36,7 +36,7 @@ The ViewModel for `BindButtonsWindow`, facilitating the separation of view logic
 
 - `Commands`: List any ICommand properties that bind user actions from the UI to ViewModel methods.
 - `Properties`: Describe any properties that reflect the state of the UI or data being manipulated.
-- `FillInAdditionalPropertiesAndCommandsHere`: Other properties and commands specific to this ViewModel.
+- 
 
 ---
 
@@ -50,7 +50,7 @@ Manages the serialization and deserialization of JSON files, providing an interf
 
 - `ReadJson<T>`: Generic method for deserializing JSON content from a file into an object of type T.
 - `WriteJson<T>`: Serializes an object of type T into a JSON string and writes it to a specified file.
-- `FillInAdditionalMethodsHere`: Additional methods for handling JSON data.
+- 
 
 ---
 
@@ -64,7 +64,7 @@ Similar to `JsonFileManager.cs`, but focused on XML data handling. This class pr
 
 - `ReadXml<T>`: Deserializes XML content from a file into an object of type T.
 - `WriteXml<T>`: Serializes an object into XML format and writes it to a file.
-- `FillInAdditionalMethodsHere`: Additional XML data handling methods.
+- 
 
 ---
 
@@ -77,7 +77,7 @@ The code-behind for the application's main window, `MainWindow.xaml.cs` orchestr
 ### Key Methods
 
 - `InitializeComponent`: Initializes the components of the main window.
-- `FillInEventHandlersAndLogic`: Describe any key event handlers, navigation logic, or other methods that facilitate the main application flow.
+-
 
 ---
 
