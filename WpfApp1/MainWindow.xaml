@@ -6,23 +6,34 @@
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
         Title="AnyStick" Height="450" Width="800">
+    
+    <!-- Set the application icon -->
+    <Window.Icon>
+        <BitmapImage UriSource="C:\Users\rossl\source\repos\ScoRoss\flightstickcalibration\WpfApp1\splashimage\png\logo-black.png"/>
+    </Window.Icon>
+
     <Window.Background>
-        <ImageBrush ImageSource="C:\Users\rossl\OneDrive\Desktop\UWS\Study_Project\Codestuff\WpfApp1\WpfApp1\splashimage\DRAKE.PNG"/> <!-- Replace 'your_image.jpg' with your actual image file -->
+        <ImageBrush ImageSource="C:\Users\rossl\source\repos\ScoRoss\flightstickcalibration\WpfApp1\splashimage\DRAKE.PNG"/>
     </Window.Background>
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" /> <!-- Adjusted height for the logo -->
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,20">
+        <!-- Logo Image for display -->
+        <Image Source="C:\Users\rossl\source\repos\ScoRoss\flightstickcalibration\WpfApp1\splashimage\png\anystick-high-resolution-logo-black-transparent.png" Width="150" Height="150" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,20"/>
+
+        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,20">
             <Button Content="Select File" Width="100" Height="30" Margin="0,0,0,5" Click="SelectFileButton_Click"/>
             <Button Content="Bind Buttons" Width="100" Height="30" Margin="0,0,0,5" Click="BindButtonsButton_Click"/>
+
             <Button Content="Save File" Width="100" Height="30" Margin="0,0,0,5"/>
         </StackPanel>
 
-        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock Text="Copyright © 2024 Ross Lamont" Foreground="White"/>
             <TextBlock Text="Banner ID: B01650642 " Foreground="White"/>
         </StackPanel>

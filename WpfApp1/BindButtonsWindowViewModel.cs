@@ -1,11 +1,16 @@
 using System;
-using System.IO;
-using System.Windows;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using System.Runtime.CompilerServices;
-using Newtonsoft.Json;
+using System.Windows;
 using System.Xml;
+using Microsoft.Win32;
+using Newtonsoft.Json;
 using Formatting = Newtonsoft.Json.Formatting;
+using SharpDX.DirectInput;
+using static WpfApp1.RelayCommand;
+using System.Windows.Input;
 
 namespace WpfApp1
 {
@@ -13,6 +18,10 @@ namespace WpfApp1
     {
         private string _selectedFilePath;
         private string _jsonContent; // Store JSON content as a variable
+        private string _loadedFilePath; // Added LoadedFilePath property
+        private string _currentButtonPressed; // New property for currently pressed button
+        private JoystickDevice _selectedJoystick;
+        private XmlFileHandler _xmlFileHandler; 
 
         public string SelectedFilePath
         {
@@ -34,11 +43,119 @@ namespace WpfApp1
                 OnPropertyChanged();
             }
         }
+        private string _xmlContent;
+        public string XmlContent
+        {
+            get => _xmlContent;
+            set
+            {
+                _xmlContent = value;
+                OnPropertyChanged(); // Make sure to raise the PropertyChanged event when the property changes
+            }
+        }
+
+        
+
+        // Added LoadedFilePath property
+        public string LoadedFilePath
+        {
+            get { return _loadedFilePath; }
+            set
+            {
+                _loadedFilePath = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // New property for currently pressed button
+        public string CurrentButtonPressed
+        {
+            get { return _currentButtonPressed; }
+            set
+            {
+                _currentButtonPressed = value;
+                OnPropertyChanged();
+                HandleButtonPress(); // Handle the button press when it changes
+            }
+        }
+
+        // Joystick detection code
+        private DirectInput _directInput;
+        private List<JoystickDevice> _joysticks;
+        public ICommand SaveCommand { get; }
 
         public BindButtonsWindowViewModel(string selectedFilePath)
         {
             SelectedFilePath = selectedFilePath;
+            _xmlFileHandler = new XmlFileHandler(selectedFilePath, null); // Direct initialization
+            InitializeJoystick();
+            // InitializeXmlFileManager(selectedFilePath); // This can be removed if you're directly initializing here
+            SaveCommand = new RelayCommand(SaveCommandExecute, SaveCommandCanExecute); ;
         }
+
+
+        private void InitializeJoystick()
+        {
+            _directInput = new DirectInput();
+            _joysticks = JoystickManager.GetConnectedJoysticks(_directInput);
+        }
+
+        private void SaveCommandExecute()
+        {
+            SaveJsonContent();
+        }
+
+        private bool SaveCommandCanExecute()
+        {
+            // You can add conditions here to determine if the command can be executed
+            return true;
+        }
+        public XmlFileHandler XmlFileHandler { get; set; }
+        public void UpdateXmlWithButton(string selectedUiButton, string capturedButton)
+        {
+            // Ensure we have the latest XML content before updating
+            var currentXmlContent = _xmlFileHandler.GetXmlContent();
+
+            // Check if currentXmlContent is not empty or null after the call
+            if (!string.IsNullOrEmpty(currentXmlContent))
+            {
+                // Now that we have the latest XML content, we can update it
+                _xmlFileHandler.UpdateXmlWithButton(selectedUiButton, capturedButton, currentXmlContent);
+
+                // Optionally, save the updated XmlContent back to the file
+                SaveUpdatedXmlContent(_xmlFileHandler.XmlContent);
+            }
+            else
+            {
+                MessageBox.Show("Unable to load XML content for updating.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void SaveUpdatedXmlContent(string xmlContent)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(_xmlFileHandler._copiedFilePath) && !string.IsNullOrEmpty(xmlContent))
+                {
+                    File.WriteAllText(_xmlFileHandler._copiedFilePath, xmlContent);
+                    MessageBox.Show("XML content updated and saved successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show("No file path specified or content is empty, cannot save.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving updated XML content: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        private void InitializeXmlFileManager(string selectedFilePath)
+        {
+            XmlFileHandler = new XmlFileHandler(selectedFilePath, null); 
+        }
+
+        
 
         private void LoadJsonContent()
         {
@@ -55,6 +172,9 @@ namespace WpfApp1
                     // Convert XML to JSON
                     JsonContent = ConvertXmlToJson(xmlContent);
 
+                    // Set the LoadedFilePath property
+                    LoadedFilePath = SelectedFilePath;
+
                     Console.WriteLine($"JSON content:\n{JsonContent}");  // Print the JSON content to the console
                 }
                 catch (Exception ex)
@@ -67,7 +187,6 @@ namespace WpfApp1
                 Console.WriteLine($"File not found: {SelectedFilePath}");
             }
         }
-
 
         private string ConvertXmlToJson(string xmlContent)
         {
@@ -88,24 +207,139 @@ namespace WpfApp1
             }
         }
 
-        public void SaveJsonContent()
+        public string ConvertJsonToXml(string jsonContent)
         {
-            if (!String.IsNullOrEmpty(_jsonContent))
+            try
             {
-                try
-                {
-                    // Write JSON content back to the file
-                    File.WriteAllText(SelectedFilePath, _jsonContent);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error saving JSON content: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                
+                // Convert JSON to XML using Newtonsoft.Json
+                XmlDocument xmlDoc = JsonConvert.DeserializeXmlNode(jsonContent, "root");
+                StringWriter sw = new StringWriter();
+                XmlTextWriter xtw = new XmlTextWriter(sw);
+                xmlDoc.WriteTo(xtw);
+                string formattedXml = sw.ToString();
+
+                return formattedXml;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error converting JSON to XML: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return null;
             }
         }
 
-        // INotifyPropertyChanged implementation
+        // Method to save JSON content as XML to a file, handling file selection, conversion, sorting, and potential exceptions
+        public void SaveJsonContent()
+        {
+            if (String.IsNullOrEmpty(_jsonContent))
+            {
+                MessageBox.Show("JSON content is empty. Nothing to save.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            var saveFileDialog = new SaveFileDialog
+            {
+                Filter = "XML Files|*.xml|All Files|*.*",
+                DefaultExt = "xml",
+                FileName = Path.GetFileNameWithoutExtension(_selectedFilePath) // Set the default file name without extension
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                _selectedFilePath = saveFileDialog.FileName;
+
+                try
+                {
+                    // Convert JSON to XML
+                    string xmlContent = ConvertJsonToXml(_jsonContent);
+
+                    if (String.IsNullOrEmpty(xmlContent))
+                    {
+                        MessageBox.Show("Error converting JSON to XML. Cannot save.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    // Load the XML content into an XmlDocument
+                    XmlDocument xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(xmlContent);
+
+                    // Sort the XML document
+                    SortXml(xmlDoc.DocumentElement);
+
+                    // Save the sorted XML content to the selected file
+                    xmlDoc.Save(_selectedFilePath);
+
+                    Debug.WriteLine($"XML content saved to: {_selectedFilePath}");
+
+                    MessageBox.Show($"XML content saved to: {_selectedFilePath}", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error saving XML content: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Save operation canceled.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private static void SortXml(XmlNode node)
+        {
+            if (node == null || node.ChildNodes.Count == 0)
+            {
+                return;
+            }
+
+            // Sort child nodes alphabetically by name
+            var sortedNodes = node.ChildNodes.Cast<XmlNode>()
+                                  .OrderBy(n => n.Name, StringComparer.OrdinalIgnoreCase)
+                                  .ToList();
+
+            // Remove existing child nodes
+            node.RemoveAll();
+
+            // Add sorted child nodes back to the parent node
+            foreach (var sortedNode in sortedNodes)
+            {
+                node.AppendChild(sortedNode);
+            }
+        }
+
+        private void HandleButtonPress()
+        {
+            // Handle the button press here, if needed
+            // For example, you can perform additional actions based on the pressed button
+            Debug.WriteLine($"Button Pressed: {CurrentButtonPressed}");
+
+            // Obtain the selected joystick using the joystick name
+            _selectedJoystick = JoystickManager.GetJoystickByName(_currentButtonPressed);
+
+            if (_selectedJoystick != null)
+            {
+                Debug.WriteLine("Selected joystick found");
+
+                // Optionally, you can perform actions with the selected joystick
+                // For example, check if a specific button is pressed on the joystick
+                bool isButtonPressed = _selectedJoystick.IsButtonDown(0); // Replace 0 with the actual button index
+
+                if (isButtonPressed)
+                {
+                    Debug.WriteLine("Button 0 is pressed on the selected joystick");
+
+                }
+                else
+                {
+                    Debug.WriteLine("Button 0 is not pressed on the selected joystick");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("Selected joystick not found");
+                // Handle the case where the selected joystick name is not found
+                MessageBox.Show("Selected joystick not found", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

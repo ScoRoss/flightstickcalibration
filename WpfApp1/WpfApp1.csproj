@@ -9,7 +9,58 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="splashimage\banubigboi.png" />
+      <None Remove="splashimage\DRAKE.PNG" />
+      <None Remove="splashimage\png\anystick-high-resolution-logo-black-transparent.png" />
+      <None Remove="splashimage\png\logo-black.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="JoystickInput" Version="1.0.6" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+      <PackageReference Include="SharpDX" Version="4.2.0" />
+      <PackageReference Include="SharpDX.DirectInput" Version="4.2.0" />
+      <PackageReference Include="SharpDX.XInput" Version="4.2.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Resource Include="splashimage\banubigboi.png" />
+      <Resource Include="splashimage\DRAKE.PNG" />
+      <Resource Include="splashimage\png\anystick-high-resolution-logo-black-transparent.png" />
+      <Resource Include="splashimage\png\logo-black.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Categories.cs">
+        <DependentUpon>BindButtonsWindow.xaml.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Devices.cs">
+        <DependentUpon>BindButtonsWindow.xaml.cs</DependentUpon>
+      </Compile>
+      <Compile Update="ActionMaps.cs">
+        <DependentUpon>BindButtonsWindow.xaml.cs</DependentUpon>
+      </Compile>
+      <Compile Update="ActionMap.cs">
+        <DependentUpon>BindButtonsWindow.xaml.cs</DependentUpon>
+      </Compile>
+      <Compile Update="BindButtonsWindowViewModel.cs">
+        <DependentUpon>BindButtonsWindow.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="Category.cs">
+        <DependentUpon>BindButtonsWindow.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="Catergory.cs">
+        <DependentUpon>BindButtonsWindow.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="CustomisationUIHeader.cs">
+        <DependentUpon>BindButtonsWindow.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="DeviceInstance.cs">
+        <DependentUpon>BindButtonsWindow.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="JoystickManager.cs">
+        <DependentUpon>MainWindow.xaml</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>
